@@ -6,7 +6,7 @@ RAD.application(function (core) {
     app.start = function () {
         var options = {
                 container_id: '#screen',
-                content: "view.main_screen",
+                content: "view.login",
                 animation: 'none'
             };
 
