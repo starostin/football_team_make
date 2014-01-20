@@ -5,53 +5,80 @@
     border: 1px solid black;
 }
 /*---------------------------------- Add player ----------------------------------------------*/
-.add-player-container {
-    position: relative;
-    margin: auto;
+* {
+    box-sizing: border-box;
+}
+.example-row {
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+.example {
     width: 100%;
+    float: left;
+    padding: 0 30px;
+    -webkit-perspective: 800px;
 }
-.add-player-rectangle {
-    position: absolute;
-    width: 100%;
-    height: 0;
-    -webkit-transform-style: preserve-3d;
-    -webkit-transform: perspective(900px);
-    -webkit-transition: all 1s ease;
-    -webkit-transform-origin: 50% 50%;
-}
-.add-player-rectangle>div {
-    position: absolute;
-    display: block;
-    height: 50px;
-}
-.top {
-    left: 0;
-    bottom: 100%;
-    width: 100%;
-    background-color: green;
-    border: 1px solid black;
-    /*opacity: 0.6;*/
-    -webkit-transition: all 1s ease;
-    -webkit-transform-origin: 0 100%;
-    -webkit-transform: translate3d(0, 0, 50px) rotate3d(1, 0, 0, 90deg);
-}
-.rotation{
-    -webkit-transform: perspective(900px) rotate3d(90,0,0,-90deg);
-    height: 50px;
-}
-.hidden{
-    display: none;
-}
-.players-list{
-    padding: 0;
-    -webkit-transition: all 1s ease;
+ul {
     list-style: none;
-    width: 100%;
 }
-.player{
+li {
+    background: #e6e6e6;
+    padding: 0 10px;
+    overflow: hidden;
+    margin-bottom: 2px;
+    line-height: 2.5;
+}
+h2 {
+    font-size: 24px;
+    margin: 0 0 5px 0;
+    letter-spacing: -1px;
+}
+
+.example-seven .details {
+    line-height: 1.4;
+    height: 0;
+    -webkit-transition: all 1s ease;
+}
+.example-seven p{
+    padding: 0;
     margin: 0;
-    height: 50px;
-    width: 100%;
-    background: gray;
-    border: 1px solid black;
+}
+#ex-seven-button.open .details{
+    height: 200px;
+}
+#ex-seven-button {
+    -webkit-transition: all 1s ease;
+}
+#ex-seven-button.open {
+    background: #a8ffd5;
+    -webkit-transform: rotateX( 360deg );
+}
+#ex-seven-button.open .title {
+    font-weight: bold;
+}
+.example-seven .new-item {
+    background: #dbc0f7;
+    max-height: 0;
+    line-height: 8.3;
+    opacity: 1;
+    -webkit-transform: translateY(-100px);
+    -webkit-transform: rotateX( 90deg );
+    -webkit-animation:
+        openSpace 1s ease forwards,
+        moveIn 1s ease forwards;
+}
+@-webkit-keyframes openSpace {
+    to {
+        max-height: 200px;
+    }
+}
+@-webkit-keyframes moveIn {
+    to {
+        opacity: 1;
+        -webkit-transform: translateY(0);
+    }
+}
+
+.example-seven ul {
+    overflow: hidden;
 }
