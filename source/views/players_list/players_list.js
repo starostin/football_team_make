@@ -16,13 +16,18 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     transitionOnce: 0,
     openAddPlayer: function(){
         console.log('=--=-==--=-=-=-=-=')
-        var insertPoint = this.$el.find("li:nth-child(1)");
+        var self = this,
+            insertPoint = this.$el.find("li:nth-child(1)");
         console.log(insertPoint)
 
         $("<li />", {
             'text': "New Item",
             'class': "new-item"
         }).insertBefore(insertPoint);
+        window.setTimeout(function(){
+            console.log('++++++++++++++++++++++++++++')
+            self.refreshScroll();
+        }, 1000)
     },
     addPlayer: function(){
         console.log('===============================')
@@ -39,6 +44,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         console.log(e.currentTarget)
         window.setTimeout(function(){
             self.refreshScroll();
-        }, 5)
+        }, 1000)
     }
 }));

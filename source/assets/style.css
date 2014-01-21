@@ -1,16 +1,12 @@
-.test{
-    height: 60px;
+.players-list{
+    position: absolute;
+    top: 40px;
+    bottom: 0;
     width: 100%;
-    background: grey;
-    border: 1px solid black;
 }
 /*---------------------------------- Add player ----------------------------------------------*/
 * {
     box-sizing: border-box;
-}
-.example-row {
-    overflow: hidden;
-    margin-bottom: 10px;
 }
 .example {
     width: 100%;
