@@ -22,7 +22,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
         $("<li />", {
             'text': "New Item",
-            'class': "new-item"
+            'class': "animated flipInX"
         }).insertBefore(insertPoint);
         window.setTimeout(function(){
             console.log('++++++++++++++++++++++++++++')

@@ -16,6 +16,7 @@
 }
 ul {
     list-style: none;
+    /*-webkit-transform: translateZ(0);*/
 }
 li {
     background: #e6e6e6;
@@ -23,6 +24,7 @@ li {
     overflow: hidden;
     margin-bottom: 2px;
     line-height: 2.5;
+    -webkit-transform: translateZ(0);
 }
 h2 {
     font-size: 24px;
@@ -54,27 +56,28 @@ h2 {
 }
 .example-seven .new-item {
     background: #dbc0f7;
-    max-height: 0;
+    max-height: 200px;
     line-height: 8.3;
     opacity: 1;
-    -webkit-transform: translateY(-100px);
-    -webkit-transform: rotateX( 90deg );
-    -webkit-animation:
-        openSpace 1s ease forwards,
-        moveIn 1s ease forwards;
 }
-@-webkit-keyframes openSpace {
-    to {
-        max-height: 200px;
-    }
-}
-@-webkit-keyframes moveIn {
-    to {
-        opacity: 1;
-        -webkit-transform: translateY(0);
-    }
-}
+    /*-webkit-transform: translateY(-100px);*/
+    /*-webkit-transform: rotateX( 90deg );*/
+    /*-webkit-animation:*/
+        /*openSpace 1s ease forwards,*/
+        /*moveIn 1s ease forwards;*/
+/*}*/
+/*@-webkit-keyframes openSpace {*/
+    /*to {*/
+        /*max-height: 200px;*/
+    /*}*/
+/*}*/
+/*@-webkit-keyframes moveIn {*/
+    /*to {*/
+        /*opacity: 1;*/
+        /*-webkit-transform: translateY(0);*/
+    /*}*/
+/*}*/
 
-.example-seven ul {
-    overflow: hidden;
-}
+/*.example-seven ul {*/
+    /*overflow: hidden;*/
+/*}*/
