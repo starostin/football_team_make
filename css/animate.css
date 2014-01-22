@@ -15,8 +15,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 
 .animated {
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
+  -webkit-animation-duration: 5s;
+  animation-duration: 5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
@@ -1623,14 +1623,16 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 @-webkit-keyframes flipInX {
   0% {
-    -webkit-transform-origin: 0 0;
-    /*-webkit-transform: perspective(1000px) translate3d(0, 0, 250px) rotateX(90deg);*/
-    transform: perspective(1000px) rotateX(90deg);
+    top: -100px;
+    -webkit-transform-origin: 50% 100%;
+    -webkit-transform: perspective(500px) rotateX(90deg);
+    transform: perspective(1000px) rotateX(0deg);
     opacity: 1;
   }
   100% {
-      -webkit-transform-origin: 0 0;
-    -webkit-transform: perspective(200px) translate3d(0, 0, 20px) rotateX(90deg);
+    top: 0;
+    -webkit-transform-origin: 100% 100%;
+    -webkit-transform: perspective(500px) rotateX(0deg);
     transform: perspective(1000px) rotateX(0deg);
     opacity: 1;
   }
