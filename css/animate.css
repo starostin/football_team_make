@@ -1631,7 +1631,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   }
   100% {
     top: 0;
-    -webkit-transform-origin: 100% 100%;
+    -webkit-transform-origin: 50% 100%;
     -webkit-transform: perspective(500px) rotateX(0deg);
     transform: perspective(1000px) rotateX(0deg);
     opacity: 1;

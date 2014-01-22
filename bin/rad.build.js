@@ -994,7 +994,7 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
 
         self.mScroll = new window.iScroll(scrollView, {
             bounce: false,
-            vScroll: false,
+            vScroll: true,
             hideScrollbar: true,
             fadeScrollbar: true,
             onBeforeScrollStart: function (e) {

@@ -13,7 +13,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .cancel': 'notAddPlayer',
         'click li': 'showPlayerInfo'
     },
-    transitionOnce: 0,
     openAddPlayer: function(){
         console.log('=--=-==--=-=-=-=-=')
         var self = this,
@@ -22,7 +21,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
         $("<li />", {
             'text': "New Item",
-            'class': "new-item animated flipInX"
+            'class': "animated flipInX"
         }).insertBefore(insertPoint);
         window.setTimeout(function(){
             console.log('++++++++++++++++++++++++++++')

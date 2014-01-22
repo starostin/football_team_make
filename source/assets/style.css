@@ -3,20 +3,14 @@
     top: 40px;
     bottom: 0;
     width: 100%;
+    overflow: auto;
 }
 /*---------------------------------- Add player ----------------------------------------------*/
 * {
     box-sizing: border-box;
 }
-.example {
-    width: 100%;
-    float: left;
-    padding: 0 30px;
-    -webkit-perspective: 800px;
-}
 ul {
     list-style: none;
-    /*-webkit-transform: translateZ(0);*/
 }
 li {
     background: #e6e6e6;
@@ -26,58 +20,3 @@ li {
     line-height: 2.5;
     -webkit-transform: translateZ(0);
 }
-h2 {
-    font-size: 24px;
-    margin: 0 0 5px 0;
-    letter-spacing: -1px;
-}
-
-.example-seven .details {
-    line-height: 1.4;
-    height: 0;
-    -webkit-transition: all 1s ease;
-}
-.example-seven p{
-    padding: 0;
-    margin: 0;
-}
-#ex-seven-button.open .details{
-    height: 200px;
-}
-#ex-seven-button {
-    -webkit-transition: all 1s ease;
-}
-#ex-seven-button.open {
-    background: #a8ffd5;
-    -webkit-transform: rotateX( 360deg );
-}
-#ex-seven-button.open .title {
-    font-weight: bold;
-}
-.example-seven .new-item {
-    background: #dbc0f7;
-    max-height: 200px;
-    line-height: 8.3;
-    opacity: 1;
-}
-    /*-webkit-transform: translateY(-100px);*/
-    /*-webkit-transform: rotateX( 90deg );*/
-    /*-webkit-animation:*/
-        /*openSpace 1s ease forwards,*/
-        /*moveIn 1s ease forwards;*/
-/*}*/
-/*@-webkit-keyframes openSpace {*/
-    /*to {*/
-        /*max-height: 200px;*/
-    /*}*/
-/*}*/
-/*@-webkit-keyframes moveIn {*/
-    /*to {*/
-        /*opacity: 1;*/
-        /*-webkit-transform: translateY(0);*/
-    /*}*/
-/*}*/
-
-/*.example-seven ul {*/
-    /*overflow: hidden;*/
-/*}*/
