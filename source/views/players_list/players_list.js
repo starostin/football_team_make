@@ -11,7 +11,21 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .add-player': 'openAddPlayer',
         'click .add': 'addPlayer',
         'click .cancel': 'notAddPlayer',
-        'click li': 'showPlayerInfo'
+        'click li': 'showPlayerInfo',
+//        'mousedown ul': 'scroll',
+//        'mouseup ul': 'stopMove'
+    },
+    scrollMove: function(e){
+        console.log('-----------------SCROLL------------------');
+    },
+    stopMove: function(e){
+        console.log('--------------------STOP SCROll------------------------');
+        this.el.removeEventListener('mousemove', this.scrollMove, false)
+    },
+    scroll: function(e){
+        console.log(e);
+        this.el.addEventListener('mousemove', this.scrollMove, false)
+      console.log('-=-==--=-=-=-=-=-=-=-==--=-=');
     },
     openAddPlayer: function(){
         console.log('=--=-==--=-=-=-=-=')

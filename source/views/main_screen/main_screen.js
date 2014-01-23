@@ -12,5 +12,27 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
             container_id: '.players-list',
             content: "view.players_list"
         }
-    ]
+    ],
+    events: {
+        'mousedown .page': 'scroll',
+        'mouseup .page': 'stopMove'
+    },
+    scrollMove: function(e){
+        console.log(e);
+//        var list = this.el.querySelector('ul');
+        console.log(this.el);
+        console.log('-----------------SCROLL------------------');
+    },
+    stopMove: function(e){
+        console.log('--------------------STOP SCROll------------------------');
+        this.el.removeEventListener('mousemove', this.scrollMove, false)
+    },
+    scroll: function(e){
+        var self = this;
+        if(e.target.tagName !== 'LI') return;
+        console.log(this.el.querySelector('ul').getBoundingClientRect());
+
+        this.el.addEventListener('mousemove', this.scrollMove.bind(self), false)
+        console.log('-=-==--=-=-=-=-=-=-=-==--=-=');
+    }
 }));
