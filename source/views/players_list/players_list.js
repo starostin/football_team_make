@@ -29,14 +29,16 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     openAddPlayer: function(){
         console.log('=--=-==--=-=-=-=-=')
+        console.log(this.mScroll)
         var self = this,
             insertPoint = this.$el.find("li:nth-child(1)");
         console.log(insertPoint)
 
         $("<li />", {
             'text': "New Item",
-            'class': "new-item animated flipInX"
+            'class': "new-item animated flipDown"
         }).insertBefore(insertPoint);
+//        $('.new-item').css({height: '200px', webkitTransform: 'rotateX(0deg) perspective(500px)', webkitTransformOrigin: '50% 100%'});
         window.setTimeout(function(){
             console.log('++++++++++++++++++++++++++++')
             self.refreshScroll();

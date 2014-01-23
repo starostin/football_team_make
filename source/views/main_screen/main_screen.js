@@ -32,7 +32,7 @@ RAD.view("view.main_screen", RAD.Blanks.View.extend({
         if(e.target.tagName !== 'LI') return;
         console.log(this.el.querySelector('ul').getBoundingClientRect());
 
-        this.el.addEventListener('mousemove', this.scrollMove.bind(self), false)
+        this.el.addEventListener('mousemove', this.scrollMove, false)
         console.log('-=-==--=-=-=-=-=-=-=-==--=-=');
     }
 }));

@@ -16,6 +16,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 .animated {
   -webkit-animation-duration: 5s;
+  -webkit-transition: all 5s ease;
   animation-duration: 5s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
@@ -1673,6 +1674,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   -webkit-animation-name: flipInX;
   animation-name: flipInX;
 }
+.flipDown {
+    height: 0;
+    -webkit-transform-origin: 50% 100%;
+    -webkit-transform: perspective(500px) rotateX(90deg);
+    transform: perspective(1000px) rotateX(0deg);
+    opacity: 1;
+}
+
 
 @-webkit-keyframes flipInY {
   0% {
