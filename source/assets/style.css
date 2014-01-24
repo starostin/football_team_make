@@ -10,7 +10,13 @@
     box-sizing: border-box;
 }
 ul {
+    position: relative;
     list-style: none;
+    -webkit-perspective:284px;
+    -webkit-perspective-origin: 50% 100%;
+    -webkit-transform-style: preserve-3d;
+    /*-webkit-transition: all 2s;*/
+    /*-webkit-transition: all 10s; *//* Safari */
 }
 li {
     background: #e6e6e6;
@@ -18,9 +24,24 @@ li {
     overflow: hidden;
     margin-bottom: 2px;
     line-height: 2.5;
+    opacity: 0.5;
     -webkit-transform: translateZ(0);
 }
+.top{
+    top: -180px;
+}
 .new-item{
+    height: 180px;
     background: green;
+    -webkit-transform: rotateX(48deg); /* Safari and Chrome */
+    -webkit-perspective-origin: 50% 100%;
+    -webkit-transform-origin: 0 100%;
+    -webkit-transition: all 2s;
     /*height: 0;*/
+}
+ul.rotate{
+    top: 0;
+}
+.rotate .new-item{
+    -webkit-transform: rotateX(0deg); /* Safari and Chrome */
 }
