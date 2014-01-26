@@ -6,17 +6,21 @@
     overflow: auto;
 }
 /*---------------------------------- Add player ----------------------------------------------*/
-* {
-    box-sizing: border-box;
+.container{
+    height: 100%;
+}
+.first{
+    height: 0;
 }
 ul {
+    /*margin-top: 100px;*/
     position: relative;
     list-style: none;
-    -webkit-perspective:284px;
-    -webkit-perspective-origin: 50% 100%;
-    -webkit-transform-style: preserve-3d;
-    /*-webkit-transition: all 2s;*/
-    /*-webkit-transition: all 10s; *//* Safari */
+    /*-webkit-perspective:284px;*/
+    /*-webkit-perspective-origin: 50% 100%;*/
+    -webkit-perspective: 800;
+    /*-webkit-transition: top 2s;*/
+    /*-webkit-transition: all 10s;*/
 }
 li {
     background: #e6e6e6;
@@ -24,24 +28,28 @@ li {
     overflow: hidden;
     margin-bottom: 2px;
     line-height: 2.5;
-    opacity: 0.5;
+    height: 50px;
+    /*opacity: 0.5;*/
     -webkit-transform: translateZ(0);
 }
 .top{
-    top: -180px;
+    top: -200px;
+    height: 400px;
 }
 .new-item{
-    height: 180px;
+    width: 100%;
     background: green;
-    -webkit-transform: rotateX(48deg); /* Safari and Chrome */
-    -webkit-perspective-origin: 50% 100%;
-    -webkit-transform-origin: 0 100%;
-    -webkit-transition: all 2s;
-    /*height: 0;*/
+    z-index: 1;
+    /*-webkit-transform: rotatex(90deg);*/
+    /*-webkit-transition: 10s;*/
+    /*-webkit-transform-origin: 50% 100%;*/
 }
-ul.rotate{
+.flipped .new-item{
+    -webkit-transform: rotatex(0deg);
+}
+ul.flipped{
     top: 0;
 }
-.rotate .new-item{
-    -webkit-transform: rotateX(0deg); /* Safari and Chrome */
-}
+/*.rotate .new-item{*/
+    /*-webkit-transform: rotateX(0deg); *//* Safari and Chrome */
+/*}*/
