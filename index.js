@@ -2,7 +2,7 @@
     'use strict';
 
     var scripts = [
-        "libs/iscroll-lite.js",
+        "libs/iscroll.js",
         "libs/hammer.min.js",
 
         // Models

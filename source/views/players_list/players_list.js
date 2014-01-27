@@ -20,6 +20,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             newLiHeight = 150,
             fromTop = self.el.querySelector('ul').getBoundingClientRect().top,
             $list = self.$el.find('ul');
+        window.scroll = this.mScroll;
+        console.log('---------------------SCROLL------------------');
 
 
         this.mScroll.options.onScrollStart = function(e){
@@ -27,10 +29,10 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             var insertPoint = self.$el.find("ul");
             var newElem = '<li class="new" style="height: '+ newLiHeight +'px">New Item</li>'
 
-            self.$el.find('ul').css({
-                'webkitTransform': 'translateY(-'+newLiHeight+'px)',
-                'height': newLiHeight * 2 + 'px'
-            });
+//            self.$el.find('ul').css({
+//                'webkitTransform': 'translateY(-'+newLiHeight+'px)',
+//                'height': newLiHeight * 2 + 'px'
+//            });
             insertPoint.prepend(newElem);
 //            $("<li />", {
 //                'text': "New Item",
@@ -45,7 +47,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
         };
         this.mScroll.options.onScrollMove = function(e){
-            console.log(e)
+
             var firstLi = self.el.querySelector('.first'),
                 top = newLiHeight - (firstLi.getBoundingClientRect().top - fromTop),
                 cosinus = (firstLi.getBoundingClientRect().top - fromTop)/newLiHeight,
@@ -57,17 +59,19 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 //            console.log(top)
 //            self.autoRotate(deg);
             if(deg<10){
-                console.log(self.$el.find('ul').css('webkitTransform'))
+                console.log(self.$el.find('ul').css('webkitTransform'));
+                this.options.topOffset = 0;
+                self.refreshScroll()
                 self.addingNew(deg, top);
-                return;
+//                return;
             }
             $newLi.css({
                 webkitTransform: 'rotateX(' + deg + 'deg)'
             });
-            console.log(self.$el.find('ul').css('webkitTransform'))
-            self.$el.find('ul').css({
-                'webkitTransform': 'translateY(-'+top+'px)'
-            })
+//            console.log(self.$el.find('ul').css('webkitTransform'))
+//            self.$el.find('ul').css({
+//                'webkitTransform': 'translateY(-'+top+'px)'
+//            })
         };
         this.mScroll.options.onTouchEnd = function(e){
             if(self.end) return;
@@ -97,10 +101,10 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     removingNew: function(){
         if(this.$el.find('.new').length){
-            this.$el.find('ul').css({
-//                'webkitTransition': 'all 3s',
-                'webkitTransform': 'translateY(-150px)'
-            });
+//            this.$el.find('ul').css({
+////                'webkitTransition': 'all 3s',
+//                'webkitTransform': 'translateY(-150px)'
+//            });
             this.$el.find('.new').css({
                 'webkitTransition': ' all 3s',
                 'webkitTransform': 'rotateX(90deg)'
@@ -120,15 +124,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var self = this;
         if(this.$el.find('.new').length){
             console.log(deg)
-            console.log('!!!!!!!!!!!!!!!!!!', top)
+            console.log('!!!!!!!!!!!!!!!!!!', top);
 //            this.$el.find('ul').css({
 //                'webkitTransform': 'translateY(-'+ top +'px)'
 //            });
-            if(top)
-                this.$el.find('ul').css({
-//                    'webkitTransition': 'all 0.5s',
-                    'webkitTransform': 'translateY(-150px)'
-                });
+//                this.$el.find('.container').css({
+////                    'webkitTransition': 'all 0.5s',
+//                    'top': '150px'
+//                });
 
             this.$el.find('.new').css({
                 'webkitTransition': ' all 0s',
