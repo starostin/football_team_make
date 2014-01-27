@@ -16,80 +16,53 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 //        'mouseup ul': 'stopMove'
     },
     onStartAttach: function(){
-        var self = this,
-            newLiHeight = 150,
-            fromTop = self.el.querySelector('ul').getBoundingClientRect().top,
-            $list = self.$el.find('ul');
+        var self = this;
         window.scroll = this.mScroll;
+        this.el.querySelector('.container').style.height = window.innerHeight + 150 + 'px';
+        this.mScroll.options.topOffset = 150;
         console.log('---------------------SCROLL------------------');
 
 
         this.mScroll.options.onScrollStart = function(e){
-            if(self.$el.find('.new').length) return;
-            var insertPoint = self.$el.find("ul");
-            var newElem = '<li class="new" style="height: '+ newLiHeight +'px">New Item</li>'
-
-//            self.$el.find('ul').css({
-//                'webkitTransform': 'translateY(-'+newLiHeight+'px)',
-//                'height': newLiHeight * 2 + 'px'
-//            });
-            insertPoint.prepend(newElem);
-//            $("<li />", {
-//                'text': "New Item",
-//                'height': newLiHeight + 'px',
-//                'class': 'new'
-//            }).append(insertPoint);
-            self.$el.find('.new').css({
-                'background': 'green',
+            self.$el.find('.new-item').css({
                 'webkitTransform': 'rotateX(90deg)',
                 'webkitTransformOrigin': '50% 100%'
             })
 
         };
         this.mScroll.options.onScrollMove = function(e){
-
-            var firstLi = self.el.querySelector('.first'),
-                top = newLiHeight - (firstLi.getBoundingClientRect().top - fromTop),
-                cosinus = (firstLi.getBoundingClientRect().top - fromTop)/newLiHeight,
-                deg = Math.acos(cosinus)*180/Math.PI,
-                $newLi = self.$el.find('.new'),
-            $list = self.$el.find('ul');
-//            console.log(self.el.querySelector('.first').getBoundingClientRect().top)
-//            console.log(deg)
-//            console.log(top)
-//            self.autoRotate(deg);
-            if(deg<10){
-                console.log(self.$el.find('ul').css('webkitTransform'));
-                this.options.topOffset = 0;
-                self.refreshScroll()
-                self.addingNew(deg, top);
-//                return;
-            }
-            $newLi.css({
+            console.log(this.y)
+            var cosinus = (150 - Math.abs(this.y))/150,
+                deg = Math.acos(cosinus)*180/Math.PI;
+            console.log(deg)
+            self.$el.find('.new-item').css({
                 webkitTransform: 'rotateX(' + deg + 'deg)'
             });
-//            console.log(self.$el.find('ul').css('webkitTransform'))
-//            self.$el.find('ul').css({
-//                'webkitTransform': 'translateY(-'+top+'px)'
-//            })
+            if(deg<10){
+                console.log('-=-==--=-=-=-=-==')
+            }
         };
         this.mScroll.options.onTouchEnd = function(e){
-            if(self.end) return;
-//            var $list = self.$el.find('ul');
-            var firstLi = self.el.querySelector('li:nth-child(2)');
-            var top = newLiHeight - (firstLi.getBoundingClientRect().top - fromTop);
-            var el = self.el.querySelector('.new');
-            var styles = window.getComputedStyle(el, null);
-            var tr = styles.getPropertyValue("-webkit-transform");
-            var values = tr.split('(')[1];
-            values = values.split(')')[0];
-            values = values.split(',');
-
-            var b = values[6]; // 0.5
-            var deg = Math.round(Math.asin(b) * (180/Math.PI));
-            console.log('##########################', deg);
-
-            self.autoRotate(deg, top);
+//            self.$el.find('.new-item').css({
+//                'webkitTransform': 'rotateX(90deg)',
+//                'webkitTransformOrigin': '50% 100%'
+//            })
+//            if(self.end) return;
+////            var $list = self.$el.find('ul');
+//            var firstLi = self.el.querySelector('li:nth-child(2)');
+//            var top = newLiHeight - (firstLi.getBoundingClientRect().top - fromTop);
+//            var el = self.el.querySelector('.new');
+//            var styles = window.getComputedStyle(el, null);
+//            var tr = styles.getPropertyValue("-webkit-transform");
+//            var values = tr.split('(')[1];
+//            values = values.split(')')[0];
+//            values = values.split(',');
+//
+//            var b = values[6]; // 0.5
+//            var deg = Math.round(Math.asin(b) * (180/Math.PI));
+//            console.log('##########################', deg);
+//
+//            self.autoRotate(deg, top);
         }
     },
     autoRotate: function(deg, top){
