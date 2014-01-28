@@ -11,38 +11,42 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 //        'click .add-player': 'openAddPlayer',
         'click .add': 'addPlayer',
         'click .cancel': 'notAddPlayer',
-        'click li': 'showPlayerInfo',
+//        'click li': 'showPlayerInfo',
 //        'mousedown ul': 'scroll',
 //        'mouseup ul': 'stopMove'
     },
     onStartAttach: function(){
         var self = this;
         window.scroll = this.mScroll;
-        this.el.querySelector('.container').style.height = window.innerHeight + 150 + 'px';
-        this.mScroll.options.topOffset = 150;
-        console.log('---------------------SCROLL------------------');
+        this.mScroll.startY = -150;
+        this.mScroll.absStartY = -150;
+        this.mScroll.scrollerStyle.webkitTransform = 'translate(0px, -150px) translateZ(0px)';
+//        this.el.querySelector('.container').style.height = window.innerHeight + 150 + 'px';
 
 
-        this.mScroll.options.onScrollStart = function(e){
+
+        this.mScroll.on('scrollStart', function(e){
+            console.log('---------------------SCROLL------------------');
             self.$el.find('.new-item').css({
                 'webkitTransform': 'rotateX(90deg)',
                 'webkitTransformOrigin': '50% 100%'
             })
 
-        };
-        this.mScroll.options.onScrollMove = function(e){
-            console.log(this.y)
-            var cosinus = (150 - Math.abs(this.y))/150,
-                deg = Math.acos(cosinus)*180/Math.PI;
-            console.log(deg)
-            self.$el.find('.new-item').css({
-                webkitTransform: 'rotateX(' + deg + 'deg)'
-            });
-            if(deg<10){
-                console.log('-=-==--=-=-=-=-==')
-            }
-        };
-        this.mScroll.options.onTouchEnd = function(e){
+        }) ;
+        this.mScroll.on('scroll', function(e){
+            console.log(this.scrollerStyle.webkitTransform)
+//            console.log(this.y>>0)
+//            var cosinus = (150 - Math.abs(this.y>>0))/150,
+//                deg = Math.acos(cosinus)*180/Math.PI;
+//            console.log(deg)
+//            self.$el.find('.new-item').css({
+//                webkitTransform: 'rotateX(' + deg + 'deg)'
+//            });
+//            if(deg<10){
+//                console.log('-=-==--=-=-=-=-==')
+//            }
+        })
+//        this.mScroll.options.onTouchEnd = function(e){
 //            self.$el.find('.new-item').css({
 //                'webkitTransform': 'rotateX(90deg)',
 //                'webkitTransformOrigin': '50% 100%'
@@ -63,7 +67,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 //            console.log('##########################', deg);
 //
 //            self.autoRotate(deg, top);
-        }
+//        }
     },
     autoRotate: function(deg, top){
         if(deg<10){
