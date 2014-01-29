@@ -18,10 +18,12 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     onStartAttach: function(){
         var self = this;
         window.scroll = this.mScroll;
-        this.mScroll.startY = -150;
-        this.mScroll.absStartY = -150;
-        this.mScroll.scrollerStyle.webkitTransform = 'translate(0px, -150px) translateZ(0px)';
-//        this.el.querySelector('.container').style.height = window.innerHeight + 150 + 'px';
+
+//        this.mScroll.startY = -150;
+//        this.mScroll.absStartY = -150;
+//        this.mScroll.scrollerStyle.webkitTransform = 'translate(0px, -150px) translateZ(0px)';
+//        this.el.querySelector('.container').style.webkitTransform = "rotate(-2deg)";
+//        this.mScroll.scrollTo(0, -15000);
 
 
 
@@ -34,14 +36,17 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
         }) ;
         this.mScroll.on('scroll', function(e){
-            console.log(this.scrollerStyle.webkitTransform)
-//            console.log(this.y>>0)
-//            var cosinus = (150 - Math.abs(this.y>>0))/150,
-//                deg = Math.acos(cosinus)*180/Math.PI;
-//            console.log(deg)
-//            self.$el.find('.new-item').css({
-//                webkitTransform: 'rotateX(' + deg + 'deg)'
-//            });
+//            console.log(this.scrollerStyle.webkitTransform)
+            console.log(this.y>>0)
+            self.$el.find('.new-item').css({
+                'height': this.y>>0 + 'px'
+            })
+            var cosinus = (Math.abs(this.y>>0))/150,
+                deg = Math.acos(cosinus)*180/Math.PI;
+            console.log(deg)
+            self.$el.find('.new-item').css({
+                webkitTransform: 'rotateX(' + deg + 'deg)'
+            });
 //            if(deg<10){
 //                console.log('-=-==--=-=-=-=-==')
 //            }

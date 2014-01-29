@@ -43,21 +43,22 @@ li {
 .new-item{
     width: 100%;
     background: green;
-    height: 150px;
-    -webkit-transform: rotatex(90deg);
+    height: 0;
+    max-height: 150px;
+    /*-webkit-transform: rotatex(90deg);*/
     /*-webkit-transition: 10s;*/
-    -webkit-transform-origin: 50% 100%;
+    /*-webkit-transform-origin: 50% 100%;*/
 }
 .new-item-container{
     -webkit-perspective: 800px;
     -webkit-perspective-origin: bottom;
 }
-.flipped .new-item{
-    -webkit-transform: rotatex(0deg);
-}
-ul.flipped{
-    top: 0;
-}
+/*.flipped .new-item{*/
+    /*-webkit-transform: rotatex(0deg);*/
+/*}*/
+/*ul.flipped{*/
+    /*top: 0;*/
+/*}*/
 /*.rotate .new-item{*/
     /*-webkit-transform: rotateX(0deg); *//* Safari and Chrome */
 /*}*/
