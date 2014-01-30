@@ -36,6 +36,13 @@ li {
     opacity: 0.5;
     -webkit-transform: translateZ(0);
 }
+.added{
+    width: 100%;
+    background: green;
+    height: 150px;
+    max-height: 150px;
+    opacity: 1;
+}
 .top{
     top: -200px;
     height: 400px;

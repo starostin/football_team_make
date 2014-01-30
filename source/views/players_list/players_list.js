@@ -47,8 +47,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             self.$el.find('.new-item').css({
                 webkitTransform: 'rotateX(' + deg + 'deg)'
             });
-            if(deg<10){
-                console.log('-=-==--=-=-=-=-==')
+            if(deg === 0){
+                if(!self.$el.find('.added').length){
+                    self.$el.find('.next').addClass('added');
+                    self.$el.find('.new-item').remove();
+
+                    console.log('-=-==--=-=-=-=-==')
+                }
+
             }
         })
 //        this.mScroll.options.onTouchEnd = function(e){
