@@ -25,31 +25,31 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 //        this.el.querySelector('.container').style.webkitTransform = "rotate(-2deg)";
 //        this.mScroll.scrollTo(0, -15000);
 
-
+        self.$el.find('.new-item').css({
+            'webkitTransform': 'rotateX(90deg)',
+            'webkitTransformOrigin': '50% 100%',
+            'top':'-150px'
+        })
 
         this.mScroll.on('scrollStart', function(e){
             console.log('---------------------SCROLL------------------');
-            self.$el.find('.new-item').css({
-                'webkitTransform': 'rotateX(90deg)',
-                'webkitTransformOrigin': '50% 100%'
-            })
+//            self.$el.find('.new-item').css({
+//                'webkitTransform': 'rotateX(90deg)',
+//                'webkitTransformOrigin': '50% 100%',
+//                'top':'-150px'
+//            })
 
         }) ;
         this.mScroll.on('scroll', function(e){
-//            console.log(this.scrollerStyle.webkitTransform)
-            console.log(this.y>>0)
-            self.$el.find('.new-item').css({
-                'height': this.y>>0 + 'px'
-            })
             var cosinus = (Math.abs(this.y>>0))/150,
                 deg = Math.acos(cosinus)*180/Math.PI;
             console.log(deg)
             self.$el.find('.new-item').css({
                 webkitTransform: 'rotateX(' + deg + 'deg)'
             });
-//            if(deg<10){
-//                console.log('-=-==--=-=-=-=-==')
-//            }
+            if(deg<10){
+                console.log('-=-==--=-=-=-=-==')
+            }
         })
 //        this.mScroll.options.onTouchEnd = function(e){
 //            self.$el.find('.new-item').css({

@@ -7,7 +7,7 @@
 }
 /*---------------------------------- Add player ----------------------------------------------*/
 .container{
-    height: auto;
+    /*height: auto;*/
     /*position: absolute;*/
     /*bottom: 0;*/
     /*width: 100%;*/
@@ -33,7 +33,7 @@ li {
     margin-bottom: 2px;
     line-height: 2.5;
     height: 50px;
-    /*opacity: 0.5;*/
+    opacity: 0.5;
     -webkit-transform: translateZ(0);
 }
 .top{
@@ -43,8 +43,10 @@ li {
 .new-item{
     width: 100%;
     background: green;
-    height: 0;
+    height: 150px;
     max-height: 150px;
+    position: absolute;
+    opacity: 1;
     /*-webkit-transform: rotatex(90deg);*/
     /*-webkit-transition: 10s;*/
     /*-webkit-transform-origin: 50% 100%;*/
