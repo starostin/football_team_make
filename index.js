@@ -6,7 +6,7 @@
         "libs/hammer.min.js",
 
         // Models
-
+        "source/models/players.js",
 
         // Application
         "source/application/application.js",

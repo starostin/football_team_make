@@ -6,61 +6,41 @@
     overflow: auto;
 }
 /*---------------------------------- Add player ----------------------------------------------*/
-.container{
-    /*height: auto;*/
-    /*position: absolute;*/
-    /*bottom: 0;*/
-    /*width: 100%;*/
-    /*top: 0;*/
-}
-.first{
-    height: 0;
-}
-ul {
-    /*margin-top: 100px;*/
-    /*position: relative;*/
-    list-style: none;
-    /*-webkit-perspective:284px;*/
-    /*-webkit-perspective-origin: 50% 100%;*/
-    -webkit-perspective: 800px;
-    /*-webkit-transition: top 2s;*/
-    /*-webkit-transition: all 10s;*/
-}
-li {
-    background: #e6e6e6;
-    padding: 0 10px;
-    overflow: hidden;
-    margin-bottom: 2px;
-    line-height: 2.5;
-    height: 50px;
-    opacity: 0.5;
-    -webkit-transform: translateZ(0);
-}
-.added{
+html, body, .container {
+    margin: 0;
+    height: 100%;
     width: 100%;
-    background: green;
-    height: 150px;
-    max-height: 150px;
-    opacity: 1;
 }
-.top{
-    top: -200px;
-    height: 400px;
+ul, li {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+li {
+    position: absolute;
+    border-bottom: 1px solid #ccc;
+    height: 100px;
+    padding: 5px;
+    background: red;
+    opacity: 0.7;
+}
+.new-item-container{
+    -webkit-perspective: 800px;
+    -webkit-perspective-origin: bottom;
 }
 .new-item{
     width: 100%;
     background: green;
     height: 150px;
     max-height: 150px;
-    position: absolute;
+    /*position: absolute;*/
     opacity: 1;
-    /*-webkit-transform: rotatex(90deg);*/
-    /*-webkit-transition: 10s;*/
-    /*-webkit-transform-origin: 50% 100%;*/
-}
-.new-item-container{
-    -webkit-perspective: 800px;
-    -webkit-perspective-origin: bottom;
 }
 /*.flipped .new-item{*/
     /*-webkit-transform: rotatex(0deg);*/

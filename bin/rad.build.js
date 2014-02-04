@@ -986,16 +986,33 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
 
     attachScroll: function () {
         var self = this,
-            scrollView = self.el.querySelector('.scroll-view') || self.el;
+            gestureAdapter,
+            scrollContainer = document.querySelector('.scroll-view') || self.el;
 
         if (self.mScroll) {
             return;
         }
 
-        self.mScroll = new  window.IScroll(scrollView, {
-            probeType: 3
+        self.mScroll = new ScrollView(scrollContainer, {
+            direction: 'vertical',
+            bounds: true,
+            onScroll: function(pos, type){
+                self.onScroll(pos, type)
+            },
+            onScrollEnd: function(){
+                self.onScrollEnd()
+            }
         });
-        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+
+
+        gestureAdapter = new GestureAdapter(scrollContainer, self.mScroll);
+        scrollContainer.scrollView = self.mScroll;
+        scrollContainer.gestureAdapter = gestureAdapter;
+
+//        self.mScroll = new  window.IScroll(scrollView, {
+//            probeType: 3
+//        });
+//        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 //        self.mScroll.on('beforeScrollStart', function (e) {
 //            console.log('-=-=-=-=-=-=-=-=-=-=-=-=');
 //            console.log(e)
@@ -1017,20 +1034,21 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
         window.setTimeout(function () {
             if (self.mScroll) {
                 self.mScroll.refresh();
-                self.mScroll.scrollTo(0, self.offsetY, 0);
+//                self.mScroll.scrollTo(0, self.offsetY, 0);
             }
         }, 0);
     },
 
     refreshScroll: function () {
         if (this.mScroll) {
+            console.log('------------REFRESH------------------')
             this.mScroll.refresh();
         }
     },
 
     detachScroll: function () {
         if (this.mScroll) {
-            this.offsetY = this.mScroll.y;
+//            this.offsetY = this.mScroll.y;
             this.mScroll.destroy();
             this.mScroll = null;
         }

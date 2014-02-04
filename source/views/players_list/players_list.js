@@ -8,172 +8,86 @@
 RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     url: 'source/views/players_list/players_list.html',
     events: {
-//        'click .add-player': 'openAddPlayer',
         'click .add': 'addPlayer',
-        'click .cancel': 'notAddPlayer',
-//        'click li': 'showPlayerInfo',
-//        'mousedown ul': 'scroll',
-//        'mouseup ul': 'stopMove'
+        'click .cancel': 'notAddPlayer'
+    },
+    onInitialize: function(){
+        this.model = RAD.models.players;
     },
     onStartAttach: function(){
-        var self = this;
+        var newItem = document.querySelector('.new-item');
+        newItem.style.webkitTransform = 'rotateX(90deg)';
+        newItem.style.webkitTransformOrigin =  '50% 100%';
         window.scroll = this.mScroll;
-
-//        this.mScroll.startY = -150;
-//        this.mScroll.absStartY = -150;
-//        this.mScroll.scrollerStyle.webkitTransform = 'translate(0px, -150px) translateZ(0px)';
-//        this.el.querySelector('.container').style.webkitTransform = "rotate(-2deg)";
-//        this.mScroll.scrollTo(0, -15000);
-
-        self.$el.find('.new-item').css({
-            'webkitTransform': 'rotateX(90deg)',
-            'webkitTransformOrigin': '50% 100%',
-            'top':'-150px'
-        })
-
-        this.mScroll.on('scrollStart', function(e){
-            console.log('---------------------SCROLL------------------');
-//            self.$el.find('.new-item').css({
-//                'webkitTransform': 'rotateX(90deg)',
-//                'webkitTransformOrigin': '50% 100%',
-//                'top':'-150px'
-//            })
-
-        }) ;
-        this.mScroll.on('scroll', function(e){
-            var cosinus = (Math.abs(this.y>>0))/150,
-                deg = Math.acos(cosinus)*180/Math.PI;
-            console.log(deg)
-            self.$el.find('.new-item').css({
-                webkitTransform: 'rotateX(' + deg + 'deg)'
-            });
-            if(deg === 0){
-                if(!self.$el.find('.added').length){
-                    self.$el.find('.next').addClass('added');
-                    self.$el.find('.new-item').remove();
-
-                    console.log('-=-==--=-=-=-=-==')
-                }
-
-            }
-        })
-//        this.mScroll.options.onTouchEnd = function(e){
-//            self.$el.find('.new-item').css({
-//                'webkitTransform': 'rotateX(90deg)',
-//                'webkitTransformOrigin': '50% 100%'
-//            })
-//            if(self.end) return;
-////            var $list = self.$el.find('ul');
-//            var firstLi = self.el.querySelector('li:nth-child(2)');
-//            var top = newLiHeight - (firstLi.getBoundingClientRect().top - fromTop);
-//            var el = self.el.querySelector('.new');
-//            var styles = window.getComputedStyle(el, null);
-//            var tr = styles.getPropertyValue("-webkit-transform");
-//            var values = tr.split('(')[1];
-//            values = values.split(')')[0];
-//            values = values.split(',');
-//
-//            var b = values[6]; // 0.5
-//            var deg = Math.round(Math.asin(b) * (180/Math.PI));
-//            console.log('##########################', deg);
-//
-//            self.autoRotate(deg, top);
-//        }
     },
-    autoRotate: function(deg, top){
-        if(deg<10){
-            this.addingNew(deg, top);
-        }else{
-            this.removingNew();
-        }
-    },
-    removingNew: function(){
-        if(this.$el.find('.new').length){
-//            this.$el.find('ul').css({
-////                'webkitTransition': 'all 3s',
-//                'webkitTransform': 'translateY(-150px)'
-//            });
-            this.$el.find('.new').css({
-                'webkitTransition': ' all 3s',
-                'webkitTransform': 'rotateX(90deg)'
-            });
-            this.$el.find('ul').one('webkitTransitionEnd', function(){
-                $(this).css({
-                    'webkitTransition': 'none'
-                });
-                $(this).css({
-                    'webkitTransform': 'translateY(0px)'
-                });
-                $(this).find('.new').remove();
-            })
-        }
-    },
-    addingNew: function(deg, top){
+    onScroll: function(position, type){
         var self = this;
-        if(this.$el.find('.new').length){
-            console.log(deg)
-            console.log('!!!!!!!!!!!!!!!!!!', top);
-//            this.$el.find('ul').css({
-//                'webkitTransform': 'translateY(-'+ top +'px)'
-//            });
-//                this.$el.find('.container').css({
-////                    'webkitTransition': 'all 0.5s',
-//                    'top': '150px'
-//                });
+        var newItem = document.querySelector('.new-item');
 
-            this.$el.find('.new').css({
-                'webkitTransition': ' all 0s',
-                'webkitTransform': 'rotateX(0deg)'
-            });
-            this.end = true;
+        if (!$('.added').length) {
+            var cosinus = (position>>0)/150,
+                deg = Math.acos(cosinus)*180/Math.PI;
+            if(position>>0 > 150){
+                deg = 0;
+            }
+            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+        } else if($('.added').length && (type === 'move') && !this.flag && (position>>0 <= 150)){
+            var cosinus = (150 - Math.abs(position>>0))/150,
+                deg = Math.acos(cosinus)*180/Math.PI;
+            if(position>>0 > 0){
+                deg = 0;
+            }
+            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+            self.itemAdded = false;
+        }
+        if(this.flag){
+            self.flag = false;
+        }
+        self.pos = position;
+    },
+    onScrollEnd: function(){
+        var self = this;
+        var newItem = document.querySelector('.new-item');
+        if(!self.itemAdded){
+            var str = newItem.style.webkitTransform,
+                a = str.split('('),
+                b = a[1].split('deg'),
+                deg = b[0];
+
+            if(deg < 20 && !newItem.classList.contains('added')){
+                self.itemAdded = true;
+                self.mScroll.mTopOffset = 0;
+                self.mScroll.scrollPosition = self.mScroll.scrollPosition-150;
+                self.flag = true;
+                newItem.style.webkitTransform = 'rotateX(0deg)';
+                newItem.classList.add('added')
+            }else if(+deg && newItem.classList.contains('added')){
+                self.itemAdded = false;
+                self.mScroll.mTopOffset = -150;
+                self.mScroll.scrollPosition = 150 + self.mScroll.scrollPosition;
+                newItem.style.webkitTransform = 'rotateX(90deg)';
+                newItem.classList.remove('added')
+            }
         }
     },
-//    scrollMove: function(e){
-//        console.log('-----------------SCROLL------------------');
-//    },
-//    stopMove: function(e){
-//        console.log('--------------------STOP SCROll------------------------');
-//        this.el.removeEventListener('mousemove', this.scrollMove, false)
-//    },
-//    scroll: function(e){
-//        console.log(e);
-//        this.el.addEventListener('mousemove', this.scrollMove, false)
-//      console.log('-=-==--=-=-=-=-=-=-=-==--=-=');
-//    },
-    openAddPlayer: function(){
-        console.log('=--=-==--=-=-=-=-=');
-        var self = this,
-            insertPoint = this.$el.find("li:nth-child(1)");
-        console.log(insertPoint)
-        $('ul').addClass('top')
-
-        $("<li />", {
-            'text': "New Item",
-            'class': "new-item"
-        }).insertBefore(insertPoint);
-//        $('.new-item').css({height: '200px', webkitTransform: 'rotateX(0deg) perspective(500px)', webkitTransformOrigin: '50% 100%'});
-
-        window.setTimeout(function(){
-//            self.el.querySelector('ul').classList.add('rotate')
-            console.log('++++++++++++++++++++++++++++')
-            self.refreshScroll();
-        }, 0)
+    directionForward: function(pos){
+        return pos >= this.pos
     },
     addPlayer: function(){
-        console.log('===============================')
-
-    },
-    notAddPlayer: function(){
-
-    },
-    showPlayerInfo: function(e){
-        var self = this,
-            $target = $(e.currentTarget);
-        $target.toggleClass('open');
-        console.log('-------------------------------------');
-        console.log(e.currentTarget)
-        window.setTimeout(function(){
-            self.refreshScroll();
-        }, 1000)
+        this.render()
+//        this.model.add([
+//            {
+//                id: 1,
+//                name: 'oleg',
+//                rate: 8
+//            },
+//            {
+//                id: 2,
+//                name: 'ttt',
+//                rate: 6
+//            }
+//        ])
+        this.refreshScroll();
+        console.log('-=-=-=-=-=-=-=-=')
     }
 }));
