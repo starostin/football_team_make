@@ -1009,23 +1009,6 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
         scrollContainer.scrollView = self.mScroll;
         scrollContainer.gestureAdapter = gestureAdapter;
 
-//        self.mScroll = new  window.IScroll(scrollView, {
-//            probeType: 3
-//        });
-//        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-//        self.mScroll.on('beforeScrollStart', function (e) {
-//            console.log('-=-=-=-=-=-=-=-=-=-=-=-=');
-//            console.log(e)
-//
-//            var target = e.target;
-//
-//            while (target.nodeType !== 1) {
-//                target = target.parentNode;
-//            }
-//            if (target.tagName !== 'SELECT' && target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA') {
-//                e.preventDefault();
-//            }
-//        })
 
     },
 
@@ -1034,21 +1017,18 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
         window.setTimeout(function () {
             if (self.mScroll) {
                 self.mScroll.refresh();
-//                self.mScroll.scrollTo(0, self.offsetY, 0);
             }
         }, 0);
     },
 
     refreshScroll: function () {
         if (this.mScroll) {
-            console.log('------------REFRESH------------------')
             this.mScroll.refresh();
         }
     },
 
     detachScroll: function () {
         if (this.mScroll) {
-//            this.offsetY = this.mScroll.y;
             this.mScroll.destroy();
             this.mScroll = null;
         }

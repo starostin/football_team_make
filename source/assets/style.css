@@ -23,7 +23,6 @@ ul, li {
 }
 
 li {
-    position: absolute;
     border-bottom: 1px solid #ccc;
     height: 100px;
     padding: 5px;
@@ -39,15 +38,5 @@ li {
     background: green;
     height: 150px;
     max-height: 150px;
-    /*position: absolute;*/
     opacity: 1;
 }
-/*.flipped .new-item{*/
-    /*-webkit-transform: rotatex(0deg);*/
-/*}*/
-/*ul.flipped{*/
-    /*top: 0;*/
-/*}*/
-/*.rotate .new-item{*/
-    /*-webkit-transform: rotateX(0deg); *//* Safari and Chrome */
-/*}*/

@@ -9,16 +9,17 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     url: 'source/views/players_list/players_list.html',
     events: {
         'click .add': 'addPlayer',
+        'click .sec': 'sec',
         'click .cancel': 'notAddPlayer'
     },
     onInitialize: function(){
         this.model = RAD.models.players;
     },
-    onStartAttach: function(){
+    onEndRender: function(){
         var newItem = document.querySelector('.new-item');
         newItem.style.webkitTransform = 'rotateX(90deg)';
         newItem.style.webkitTransformOrigin =  '50% 100%';
-        window.scroll = this.mScroll;
+        console.log('-=-=-=-=-=-=-=-=-=-=END RENDER-=-=-=-=-=-=-=-=-=')
     },
     onScroll: function(position, type){
         var self = this;
@@ -74,20 +75,24 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         return pos >= this.pos
     },
     addPlayer: function(){
+        this.model.add([
+            {
+                id: 1,
+                name: 'oleg',
+                rate: 8
+            },
+        ]);
         this.render()
-//        this.model.add([
-//            {
-//                id: 1,
-//                name: 'oleg',
-//                rate: 8
-//            },
-//            {
-//                id: 2,
-//                name: 'ttt',
-//                rate: 6
-//            }
-//        ])
-        this.refreshScroll();
-        console.log('-=-=-=-=-=-=-=-=')
+        RAD.core.getView('view.main_screen').render();
+    },
+    sec: function(){
+        this.model.add([
+            {
+                id: 2,
+                name: '4433',
+                rate: 22
+            },
+        ])
+        RAD.core.getView('view.main_screen').render();
     }
 }));

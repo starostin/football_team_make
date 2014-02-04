@@ -63,17 +63,16 @@ function ScrollView(element, o) {
     };
 
     mView.refresh = function () {
-        console.log('==============REFRESH==============')
 
         mAnimator.stop();
 
         mView._calculateMaxScroll();
         mAnimator.setBounds(Math.min(0, -mView._MaxScroll), 0, mView._ParentSize / 2.5);
-        if (mScrollingWrapper[mParentProp]) {
-            mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
-        } else {
+//        if (mScrollingWrapper[mParentProp]) {
+//            mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
+//        } else {
             mView.setPosition(0);
-        }
+//        }
     };
 
     mView.reflow = function () {

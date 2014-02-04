@@ -2,7 +2,12 @@
     <div class="new-item-container">
         <div class="new-item">
             <button class="add">Add</button>
+            <button class="sec">sec</button>
         </div>
     </div>
-
+    {{# if(model.length) { }}
+    {{# _(model).each(function(player) { }}
+        <li>{{ player.name }}</li>
+    {{# }); }}
+    {{# } }}
 </ul>
