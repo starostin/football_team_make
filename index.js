@@ -2,11 +2,6 @@
     'use strict';
 
     var scripts = [
-        "libs/scrollview.js",
-        "libs/animator.js",
-        "libs/utils.js",
-        "libs/objectpool.js",
-        "libs/gestureadapter.js",
 
         // Models
         "source/models/players.js",

@@ -74,13 +74,23 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         return pos >= this.pos
     },
     addPlayer: function(){
-        this.model.add([
-            {
-                id: 1,
-                name: 'oleg',
-                rate: 8
-            }
-        ]);
+        var self = this
+        $('.added').addClass('animate');
+        $('.added').css({
+            'webkitTransition': 'all 0.5s'
+        })
+        $('.added').addClass('likeLi')
+        document.querySelector('.added').addEventListener('webkitTransitionEnd', function(){
+            self.model.add([
+                {
+                    id: 1,
+                    name: 'oleg',
+                    rate: 8
+                }
+            ]);
+        })
+
+
     },
     sec: function(){
         this.model.add([
