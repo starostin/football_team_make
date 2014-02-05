@@ -140,7 +140,7 @@ function ScrollView(element, o) {
     mView.setPosition = (function (enableListener) {
         if (enableListener) {
             return function (position, force, typeOfMotion) {
-//                mView.scrollPosition = force ? position : mAnimator.checkBounds(position);
+                mView.scrollPosition = force ? position : mAnimator.checkBounds(position);
                 mView.scrollPosition = position
 //                console.log(mTransitionArray[1])
 //                console.log(mView.scrollPosition)

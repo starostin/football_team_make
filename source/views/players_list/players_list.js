@@ -19,7 +19,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var newItem = document.querySelector('.new-item');
         newItem.style.webkitTransform = 'rotateX(90deg)';
         newItem.style.webkitTransformOrigin =  '50% 100%';
-        console.log('-=-=-=-=-=-=-=-=-=-=END RENDER-=-=-=-=-=-=-=-=-=')
     },
     onScroll: function(position, type){
         var self = this;
@@ -80,10 +79,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 id: 1,
                 name: 'oleg',
                 rate: 8
-            },
+            }
         ]);
-        this.render()
-        RAD.core.getView('view.main_screen').render();
     },
     sec: function(){
         this.model.add([
@@ -91,8 +88,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 id: 2,
                 name: '4433',
                 rate: 22
-            },
+            }
         ])
-        RAD.core.getView('view.main_screen').render();
     }
 }));

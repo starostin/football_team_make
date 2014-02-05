@@ -785,7 +785,7 @@ RAD.namespace('RAD.Blanks.View', Backbone.View.extend({
             if (counter <= 0) {
                 self.onrender();
                 self.onEndRender();
-                self.initScrollRefresh();
+//                self.initScrollRefresh();
                 self.renderRequest = false;
 
                 if (typeof callback === 'function') {
@@ -982,15 +982,21 @@ RAD.namespace('RAD.Blanks.Service', RAD.Class.extend({
 RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
 
     className: 'scroll-view',
-    offsetY: 0,
 
-    attachScroll: function () {
+    refreshScroll: function () {
+        if (this.mScroll) {
+            this.mScroll.refresh();
+        }
+    },
+    onrender: function(){
         var self = this,
             gestureAdapter,
             scrollContainer = document.querySelector('.scroll-view') || self.el;
 
         if (self.mScroll) {
-            return;
+            self.mScroll.destroy();
+            self.mScroll = null;
+            scrollContainer.gestureAdapter.destroy()
         }
 
         self.mScroll = new ScrollView(scrollContainer, {
@@ -1004,30 +1010,11 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
             }
         });
 
-
         gestureAdapter = new GestureAdapter(scrollContainer, self.mScroll);
         scrollContainer.scrollView = self.mScroll;
         scrollContainer.gestureAdapter = gestureAdapter;
-
-
     },
-
-    onattach: function () {
-        var self = this;
-        window.setTimeout(function () {
-            if (self.mScroll) {
-                self.mScroll.refresh();
-            }
-        }, 0);
-    },
-
-    refreshScroll: function () {
-        if (this.mScroll) {
-            this.mScroll.refresh();
-        }
-    },
-
-    detachScroll: function () {
+    ondestroy: function(){
         if (this.mScroll) {
             this.mScroll.destroy();
             this.mScroll = null;
