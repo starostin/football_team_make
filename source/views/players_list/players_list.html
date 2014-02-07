@@ -1,16 +1,25 @@
 <ul>
     <div class="new-item-container">
         <div class="new-item">
-            <button class="add">Add</button>
-            <button class="sec">sec</button>
-        </div>
-        <div class="back">
-
+            <div class="front">
+                <button class="add">Add</button>
+            </div>
+            <div class="back">
+                <h1>BACK</h1>
+            </div>
         </div>
     </div>
     {{# if(model.length) { }}
     {{# _(model).each(function(player) { }}
-        <li>{{ player.name }}</li>
+        <li>
+            <div class="item">
+                <div class="back">
+                    <h1>BACK</h1>
+                </div>
+                <div class="front">
+                </div>
+            </div>
+        </li>
     {{# }); }}
     {{# } }}
 </ul>

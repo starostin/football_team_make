@@ -1002,12 +1002,15 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
         self.mScroll = new ScrollView(scrollContainer, {
             direction: 'vertical',
             bounds: true,
-            onScroll: function(pos, type){
-                self.onScroll(pos, type)
+            onScroll: function(pos, type, e){
+                self.onScroll(pos, type, e)
             },
-            onScrollEnd: function(){
-                self.onScrollEnd()
-            }
+            onScrollEnd: function(e){
+                self.onScrollEnd(e)
+            },
+            onScrollStart: function(e){
+                self.onScrollStart(e)
+            },
         });
 
         gestureAdapter = new GestureAdapter(scrollContainer, self.mScroll);

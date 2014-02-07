@@ -23,39 +23,68 @@ ul, li {
 }
 
 li {
-    border-bottom: 1px solid #ccc;
-    height: 111px;
-    padding: 5px;
-    background: red;
-    opacity: 0.7;
+    -webkit-perspective: 800px;
+    -webkit-perspective-origin-x: 50%;
+    -webkit-perspective-origin-y: 100%;
+    -webkit-transform-style: preserve-3d;
 }
-.likeLi button{
-    opacity: 0;
-}
-.added.likeLi{
-    border-bottom: 1px solid #ccc;
-    height: 100px;
-    padding: 5px;
-    background: red;
-    opacity: 0.7;
-}
+
 .new-item-container{
     -webkit-perspective: 800px;
     -webkit-perspective-origin-x: 50%;
     -webkit-perspective-origin-y: 100%;
+    -webkit-transform-style: preserve-3d;
 }
-.new-item{
+.new-item, .front, .back, .item{
     width: 100%;
-    background: green;
     height: 150px;
-    max-height: 150px;
-    opacity: 1;
 }
-@-webkit-keyframes spinX
-{
-    0%   {-webkit-transform: rotateX(0deg); -webkit-transform-origin: 0% 50% 0;}
-    100% {-webkit-transform: rotateX(360deg); -webkit-transform-origin: 0% 50% 0;}
+.new-item, .item{
+    -webkit-transform-style: preserve-3d;
+    position: relative;
 }
-.animate{
-    -webkit-animation: spinX 0.5s;
+.front, .back {
+    -webkit-backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.item .front{
+    background: green;
+    -webkit-transition: 5s;
+    z-index: 1;
+    -webkit-transform: rotateX(180deg);
+}
+.item .back{
+    background: red;
+    border: 1px solid black;
+    z-index: 2;
+    -webkit-transition: 5s;
+    -webkit-transform: rotateX(0deg);
+}
+.item.rotate .back{
+    -webkit-transform: rotateX(180deg);
+}
+.item.rotate .front{
+    -webkit-transform: rotateX(0deg);
+}
+.new-item .front {
+    background: green;
+    -webkit-transition: 5s;
+    z-index: 2;
+    -webkit-transform: rotateX(0deg);
+}
+.new-item .back {
+    -webkit-transition: 5s;
+    color: black;
+    background: red;
+    -webkit-transform: rotateX(180deg);
+}
+.new-item.rotate .front {
+    -webkit-transform: rotateX(180deg);
+}
+.new-item.rotate .back {
+    -webkit-transform: rotateX(0deg);
 }

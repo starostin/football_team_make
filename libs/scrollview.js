@@ -32,18 +32,21 @@ function ScrollView(element, o) {
         mView.mTopOffset = -150;
 
     function eventPointerDown(e) {
+        if(typeof o.onScrollStart === 'function'){
+            o.onScrollStart(e)
+        }
         mAnimator.stop();
         mLastPointerCoordinate = e[mCoordProp];
     }
 
     function eventPointerMove(e) {
-        mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]));
+        mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), null, null, e);
         mLastPointerCoordinate = e[mCoordProp];
     }
 
     function eventPointerUp(e) {
         if(typeof o.onScrollEnd === 'function'){
-            o.onScrollEnd()
+            o.onScrollEnd(e)
         }
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
@@ -139,15 +142,12 @@ function ScrollView(element, o) {
 
     mView.setPosition = (function (enableListener) {
         if (enableListener) {
-            return function (position, force, typeOfMotion) {
+            return function (position, force, typeOfMotion, e) {
                 mView.scrollPosition = force ? position : mAnimator.checkBounds(position);
                 mView.scrollPosition = position
-//                console.log(mTransitionArray[1])
-//                console.log(mView.scrollPosition)
-//                console.log(mView.mTopOffset)
                 mTransitionArray[1] = mView.mTopOffset + mView.scrollPosition;
                 mScrollingWrapper.style[mTransformName] = mTransitionArray.join("");
-                o.onScroll(mView.scrollPosition, typeOfMotion || STRINGS.move);
+                o.onScroll(mView.scrollPosition, typeOfMotion || STRINGS.move, e);
             };
         }
         return function (position, force) {

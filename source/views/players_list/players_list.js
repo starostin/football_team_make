@@ -10,61 +10,71 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     events: {
         'click .add': 'addPlayer',
         'click .sec': 'sec',
-        'click .cancel': 'notAddPlayer'
+        'click ul .item': 'rotateItem'
     },
     onInitialize: function(){
         this.model = RAD.models.players;
     },
     onEndRender: function(){
-        var newItem = document.querySelector('.new-item');
+        var newItem = this.el.querySelector('.new-item');
         newItem.style.webkitTransform = 'rotateX(90deg)';
         newItem.style.webkitTransformOrigin =  '50% 100%';
     },
-    onScroll: function(position, type){
-        var self = this;
-        var newItem = document.querySelector('.new-item');
+    newItemWidth: 150,
+    onScroll: function(posit, type, e){
+        console.log('-=------------------------------SCROLL MOVE------------------------');
+        console.log(e)
+        var newItem = this.el.querySelector('.new-item'),
+            position = posit>> 0,
+            isNewAdded = this.el.querySelector('.added');
 
-        if (!$('.added').length) {
-            var cosinus = (position>>0)/150,
+        if (!isNewAdded) {
+            var cosinus = (position)/this.newItemWidth,
                 deg = Math.acos(cosinus)*180/Math.PI;
-            if(position>>0 > 150){
+            if(position > this.newItemWidth){
                 deg = 0;
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
-        } else if($('.added').length && (type === 'move') && !this.flag && (position>>0 <= 150)){
-            var cosinus = (150 - Math.abs(position>>0))/150,
+        } else if(isNewAdded && (type === 'move') && !this.flag && (position <= this.newItemWidth)){
+            var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth,
                 deg = Math.acos(cosinus)*180/Math.PI;
-            if(position>>0 > 0){
+            if(position > 0){
                 deg = 0;
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
-            self.itemAdded = false;
+            this.itemAdded = false;
         }
         if(this.flag){
-            self.flag = false;
+            this.flag = false;
         }
-        self.pos = position;
+        this.pos = position;
     },
-    onScrollEnd: function(){
-        var self = this;
-        var newItem = document.querySelector('.new-item');
-        if(!self.itemAdded){
+    onScrollStart: function(e){
+        console.log('-=------------------------------SCROLL START------------------------');
+        console.log(e)
+    },
+    onScrollEnd: function(e){
+        console.log('-=------------------------------SCROLL END------------------------');
+        console.log(e)
+        var newItem = this.el.querySelector('.new-item'),
+            scroll = this.mScroll;
+        if(!this.itemAdded){
             var str = newItem.style.webkitTransform,
                 a = str.split('('),
                 b = a[1].split('deg'),
                 deg = b[0];
 
-            if(deg < 20 && !newItem.classList.contains('added')){
-                self.itemAdded = true;
-                self.mScroll.mTopOffset = 0;
-                self.mScroll.scrollPosition = self.mScroll.scrollPosition-150;
-                self.flag = true;
+            if(deg <= 10 && !newItem.classList.contains('added')){
+                this.itemAdded = true;
+                this.flag = true;
+                scroll.mTopOffset = 0;
+                scroll.scrollPosition = scroll.scrollPosition - this.newItemWidth;
                 newItem.style.webkitTransform = 'rotateX(0deg)';
                 newItem.classList.add('added')
             }else if(+deg && newItem.classList.contains('added')){
-                self.itemAdded = false;
-                self.mScroll.mTopOffset = -150;
-                self.mScroll.scrollPosition = 150 + self.mScroll.scrollPosition;
+                this.itemAdded = false;
+                scroll.mTopOffset = -this.newItemWidth;
+                scroll.scrollPosition = this.newItemWidth + scroll.scrollPosition;
                 newItem.style.webkitTransform = 'rotateX(90deg)';
                 newItem.classList.remove('added')
             }
@@ -73,32 +83,25 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     directionForward: function(pos){
         return pos >= this.pos
     },
+    rotateItem: function(e){
+        var target = e.currentTarget;
+        console.log(target)
+        target.classList.toggle('rotate')
+    },
     addPlayer: function(){
-        var self = this
-        $('.added').addClass('animate');
-        $('.added').css({
-            'webkitTransition': 'all 0.5s'
-        })
-        $('.added').addClass('likeLi')
-        document.querySelector('.added').addEventListener('webkitTransitionEnd', function(){
+        var self = this,
+            addedItem = this.el.querySelector('.added');
+//        addedItem.style.webkitTransition = '5s';
+        addedItem.classList.add('rotate');
+        addedItem.addEventListener('webkitTransitionEnd', function(){
+            console.log('-=-=-=-=-=-=-=-=-=-==--=-=-=')
             self.model.add([
                 {
-                    id: 1,
+                    id: Math.random(),
                     name: 'oleg',
                     rate: 8
                 }
             ]);
         })
-
-
-    },
-    sec: function(){
-        this.model.add([
-            {
-                id: 2,
-                name: '4433',
-                rate: 22
-            }
-        ])
     }
 }));
