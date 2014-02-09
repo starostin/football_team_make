@@ -24,6 +24,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     onScroll: function(posit, type, e){
         console.log('-=------------------------------SCROLL MOVE------------------------');
         console.log(e)
+        if(this.scrollStarted){
+            this.scroll = e;
+        }
         var newItem = this.el.querySelector('.new-item'),
             position = posit>> 0,
             isNewAdded = this.el.querySelector('.added');
@@ -50,12 +53,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.pos = position;
     },
     onScrollStart: function(e){
+        this.scrollStarted = true;
         console.log('-=------------------------------SCROLL START------------------------');
         console.log(e)
     },
     onScrollEnd: function(e){
         console.log('-=------------------------------SCROLL END------------------------');
         console.log(e)
+        this.scrollEnd = this.scroll;
         var newItem = this.el.querySelector('.new-item'),
             scroll = this.mScroll;
         if(!this.itemAdded){
@@ -79,14 +84,24 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 newItem.classList.remove('added')
             }
         }
+//        this.scroll = false;
     },
     directionForward: function(pos){
         return pos >= this.pos
     },
     rotateItem: function(e){
-        var target = e.currentTarget;
-        console.log(target)
-        target.classList.toggle('rotate')
+        if(!this.scrollEnd && e.target.classList.contains('back')){
+            var target = e.currentTarget,
+                index = +target.getAttribute('data-index'),
+                player = this.model.at(index);
+            console.log('-------------------------------------------');
+            console.log(e)
+            player.set({
+                class: 'rotate'
+            }, {silent: true})
+            target.classList.add('rotate')
+        }
+
     },
     addPlayer: function(){
         var self = this,
@@ -95,13 +110,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         addedItem.classList.add('rotate');
         addedItem.addEventListener('webkitTransitionEnd', function(){
             console.log('-=-=-=-=-=-=-=-=-=-==--=-=-=')
-            self.model.add([
+            self.model.unshift(
                 {
                     id: Math.random(),
                     name: 'oleg',
-                    rate: 8
-                }
-            ]);
+                    rate: 8,
+                    class: ''
+                });
         })
+
     }
 }));

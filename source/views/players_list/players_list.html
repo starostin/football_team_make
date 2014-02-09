@@ -1,3 +1,4 @@
+{{# console.log('----------------------------------------RENDER------------------------')}}
 <ul>
     <div class="new-item-container">
         <div class="new-item">
@@ -10,9 +11,9 @@
         </div>
     </div>
     {{# if(model.length) { }}
-    {{# _(model).each(function(player) { }}
+    {{# _(model).each(function(player, index) { }}
         <li>
-            <div class="item">
+            <div class="item {{ player.class }}" data-index="{{ index }}" >
                 <div class="back">
                     <h1>BACK</h1>
                 </div>
