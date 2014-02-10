@@ -36,9 +36,10 @@ function ScrollView(element, o) {
 
     function eventPointerDown(e) {
         console.log('----------------------------------DOWN--------------------------------')
+        mView.X = [];
+        mView.Y = [];
         mView.X.push(e.clientX);
         mView.Y.push(e.clientY);
-        mView.beginE = e;
         mView.beginElIndex = e.origin.target.parentNode.getAttribute('data-index');
         if(typeof o.onScrollStart === 'function'){
             o.onScrollStart(e)
@@ -46,44 +47,74 @@ function ScrollView(element, o) {
         mAnimator.stop();
         mLastPointerCoordinate = e[mCoordProp];
     }
+    function directionVert(xArr, yArr){
+        var xSum = 0, ySum = 0;
+        for(var i=0; i<xArr.length; i++){
+            xSum+=xArr[i];
+        }
+        for(var j=0; j<xArr.length; j++){
+            ySum+=yArr[j];
+        }
+        console.log(xArr);
+        console.log(yArr);
+        console.log('------------------------DIRECTION VERT------------', Math.abs(xArr[0] - xSum/xArr.length) <= Math.abs(yArr[0] - ySum/yArr.length))
+        return Math.abs(xArr[0] - xSum/xArr.length) <= Math.abs(yArr[0] - ySum/yArr.length)
+    }
 
     function eventPointerMove(e) {
         mView.X.push(e.clientX);
         mView.Y.push(e.clientY);
-        console.log('------------------------------------MOVE-----------------------------');
-        if(e && mView.X.length>=2 && (mView.X[0] !==  mView.X[1]) && e.origin.target.classList.contains(o.swipeTargetClass)){
-            if(e.origin.target.parentNode.getAttribute('data-index') !== mView.beginElIndex){
-                console.log('-----------------------OTHER---------------------');
-//                return;
-            }
-            mView.swipe = true;
-            if(typeof o.onSwipe === 'function'){
-                o.onSwipe(e, mView.beginElIndex)
-            }
-            return;
-        }else if(!e.origin.target.classList.contains(o.swipeTargetClass) && mView.swipe){
-            if(typeof o.onSwipe === 'function'){
-                o.onSwipe(e, mView.beginElIndex)
-            }
-            return;
+        if(mView.X.length < 10) return;
+        if(mView.X.length>= 10 && !mView.directionDefined){
+            console.log('------------------------------------MOVE-----------------------------');
+            mView.directionVert = directionVert(mView.X, mView.Y);
+            mView.directionDefined = true;
+//            eventPointerDown(e)
         }
-        mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), null, null, e);
-        mLastPointerCoordinate = e[mCoordProp];
+        if((mView.directionDefined && mView.directionVert) || (mView.X.length<10 && !mView.directionDefined)){
+            console.log('----------------------------GOGOGO----------------------')
+            mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), null, null, e);
+            mLastPointerCoordinate = e[mCoordProp];
+        }else if(mView.directionDefined && !mView.directionVert){
+            if(typeof o.onSwipe === 'function'){
+                o.onSwipe(e, mView.beginElIndex)
+            }
+        }
+//        if(e.origin.target.classList.contains(o.swipeTargetClass)){
+//            if(e.origin.target.parentNode.getAttribute('data-index') !== mView.beginElIndex){
+//                console.log('-----------------------OTHER---------------------');
+////                return;
+//            }
+//            mView.swipe = true;
+//            if(typeof o.onSwipe === 'function'){
+//                o.onSwipe(e, mView.beginElIndex)
+//            }
+//            return;
+//        }else if(!e.origin.target.classList.contains(o.swipeTargetClass) && mView.swipe){
+//            if(typeof o.onSwipe === 'function'){
+//                o.onSwipe(e, mView.beginElIndex)
+//            }
+//            return;
+//        }
+
     }
 
     function eventPointerUp(e) {
-        console.log('---------------------------------END-----------------------')
         mView.X = [];
         mView.Y = [];
         if(typeof o.onScrollEnd === 'function'){
             o.onScrollEnd(e)
         }
-        if(mView.swipe){
-            mView.swipe = false;
+        if(mView.directionDefined && !mView.directionVert){
+            mView.directionDefined = false;
+            mView.directionVert = null;
+            console.log('---------------------------------END-----------------------')
             return;
         }
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
+        mView.directionDefined = false;
+        mView.directionVert = null;
     }
 
     function eventResize() {
