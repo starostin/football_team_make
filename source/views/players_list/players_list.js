@@ -13,8 +13,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click ul .item': 'rotateItem',
         'click .edit': 'editItem'
     },
-    X: [],
-    Y: [],
     pos: {},
     onInitialize: function(){
         this.model = RAD.models.players;
@@ -26,16 +24,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     newItemWidth: 150,
     onScroll: function(posit, type, e){
-        console.log('-=------------------------------SCROLL MOVE------------------------');
-        console.log(e)
-        if(e){
-            this.X.push(e.clientX);
-            this.Y.push(e.clientY);
-        }
-//        if(this.X.length>=2 && this.X[0] !== this.X[1]){
-//            this.removePlayer(e);
-//            return;
-//        }
+//        console.log('-=------------------------------SCROLL MOVE------------------------');
+//        console.log(e)
         if(this.scrollStarted){
             this.scroll = e;
         }
@@ -51,7 +41,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
         } else if(e && isNewAdded && (position <= this.newItemWidth)){
-            console.log('-----------------------------ELSE---------------------------')
             var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth,
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position > 0){
@@ -62,15 +51,13 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     onScrollStart: function(e){
         this.scrollStarted = true;
-        this.moveLeft = e.origin.target.classList.contains('back');
-        this.X.push(e.clientX);
-        this.Y.push(e.clientY);
-        console.log('-=------------------------------SCROLL START------------------------');
-        console.log(e)
     },
     onScrollEnd: function(e){
-        console.log('-=------------------------------SCROLL END------------------------');
-        console.log(e)
+//        console.log('-=------------------------------SCROLL END------------------------');
+//        console.log(e)
+        if(this.mScroll.swipe){
+            console.log('------------------------END SWIPE---------------------')
+        }
         this.scrollEnd = this.scroll;
         var newItem = this.el.querySelector('.new-item'),
             scroll = this.mScroll,
@@ -92,19 +79,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.X = [];
         this.Y = [];
     },
-    removePlayer: function(e){
-        var item = e.origin.target.parentNode,
-            style = item.style;
-//        item.parentNode.style.position = 'relative';
-//        style.position = 'relative';
-//        style.right = this.X[0] - e.clientX + 'px';
-        console.log('------------------------------REMOVE-------------------------')
-        console.log(this.X[0] - e.clientX)
+    onSwipe: function(e, index){
+        var item = this.el.querySelector('[data-index="' + index +'"]'),
+            style = item.style,
+            scroll = this.mScroll;
+        style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
+        console.log(e)
     },
     direction: function(e){
-        console.log('-==--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-        console.log(e.screenX)
-        console.log(this.pos.X)
         return {
             top: e.clientY < this.pos.Y,
             left: e.clientX < this.pos.X,
@@ -118,8 +100,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             var target = e.currentTarget,
                 index = +target.getAttribute('data-index'),
                 player = this.model.at(index);
-            console.log('-------------------------------------------');
-            console.log(e)
+
             player.set({
                 class: 'rotate'
             }, {silent: true})
@@ -130,8 +111,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         e.stopPropagation();
         var target = e.currentTarget,
             playerEl = target.parentNode.parentNode,
-            index = +target.getAttribute('data-index'),
-            player = this.model.at(index-1);
+            index = +playerEl.getAttribute('data-index'),
+            player = this.model.at(index);
         player.set({
             class: ''
         }, {silent: true})
@@ -143,7 +124,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
         addedItem.classList.add('rotate');
         addedItem.addEventListener('webkitTransitionEnd', function(){
-            console.log('-=-=-=-=-=-=-=-=-=-==--=-=-=')
             self.model.unshift(
                 {
                     id: Math.random(),

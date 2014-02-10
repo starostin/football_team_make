@@ -2,6 +2,7 @@ function ScrollView(element, o) {
     var mView = this,
         mScrollingWrapper,
 
+
         STRINGS = {
             vertical: 'vertical',
             fling: 'fling',
@@ -30,8 +31,15 @@ function ScrollView(element, o) {
         mTransitionArray = [],
         eventFling;
         mView.mTopOffset = -150;
+        mView.X = [];
+        mView.Y = [];
 
     function eventPointerDown(e) {
+        console.log('----------------------------------DOWN--------------------------------')
+        mView.X.push(e.clientX);
+        mView.Y.push(e.clientY);
+        mView.beginE = e;
+        mView.beginElIndex = e.origin.target.parentNode.getAttribute('data-index');
         if(typeof o.onScrollStart === 'function'){
             o.onScrollStart(e)
         }
@@ -40,13 +48,39 @@ function ScrollView(element, o) {
     }
 
     function eventPointerMove(e) {
+        mView.X.push(e.clientX);
+        mView.Y.push(e.clientY);
+        console.log('------------------------------------MOVE-----------------------------');
+        if(e && mView.X.length>=2 && (mView.X[0] !==  mView.X[1]) && e.origin.target.classList.contains(o.swipeTargetClass)){
+            if(e.origin.target.parentNode.getAttribute('data-index') !== mView.beginElIndex){
+                console.log('-----------------------OTHER---------------------');
+//                return;
+            }
+            mView.swipe = true;
+            if(typeof o.onSwipe === 'function'){
+                o.onSwipe(e, mView.beginElIndex)
+            }
+            return;
+        }else if(!e.origin.target.classList.contains(o.swipeTargetClass) && mView.swipe){
+            if(typeof o.onSwipe === 'function'){
+                o.onSwipe(e, mView.beginElIndex)
+            }
+            return;
+        }
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), null, null, e);
         mLastPointerCoordinate = e[mCoordProp];
     }
 
     function eventPointerUp(e) {
+        console.log('---------------------------------END-----------------------')
+        mView.X = [];
+        mView.Y = [];
         if(typeof o.onScrollEnd === 'function'){
             o.onScrollEnd(e)
+        }
+        if(mView.swipe){
+            mView.swipe = false;
+            return;
         }
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
