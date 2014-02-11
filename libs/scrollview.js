@@ -44,8 +44,11 @@ function ScrollView(element, o) {
         if(typeof o.onScrollStart === 'function'){
             o.onScrollStart(e)
         }
-        mAnimator.stop();
-        mLastPointerCoordinate = e[mCoordProp];
+//        if(mView.directionDefined){
+            mAnimator.stop();
+            mLastPointerCoordinate = e[mCoordProp];
+//        }
+
     }
     function directionVert(xArr, yArr){
         var xSum = 0, ySum = 0;
@@ -62,14 +65,24 @@ function ScrollView(element, o) {
     }
 
     function eventPointerMove(e) {
+
+        if(Math.abs(mView.X[mView.X.length-1] - e.clientX)>10 && !mView.directionDefined){
+            mView.directionVert = false;
+            mView.directionDefined = true;
+        }
+        if(Math.abs(mView.Y[mView.Y.length-1] - e.clientY)>10 && !mView.directionDefined){
+            console.log('------------------------------------MOVE-----------------------------');
+            console.log(e.clientY)
+            mView.directionVert = true;
+            mView.directionDefined = true;
+        }
         mView.X.push(e.clientX);
         mView.Y.push(e.clientY);
-        if(mView.X.length < 10) return;
+        if(mView.X.length < 10 && !mView.directionDefined) return;
         if(mView.X.length>= 10 && !mView.directionDefined){
-            console.log('------------------------------------MOVE-----------------------------');
             mView.directionVert = directionVert(mView.X, mView.Y);
             mView.directionDefined = true;
-//            eventPointerDown(e)
+            eventPointerDown(e)
         }
         if((mView.directionDefined && mView.directionVert) || (mView.X.length<10 && !mView.directionDefined)){
             console.log('----------------------------GOGOGO----------------------')
@@ -100,17 +113,18 @@ function ScrollView(element, o) {
     }
 
     function eventPointerUp(e) {
-        mView.X = [];
-        mView.Y = [];
+        console.log('---------------------------------END-----------------------')
+//        mView.X = [];
+//        mView.Y = [];
         if(typeof o.onScrollEnd === 'function'){
             o.onScrollEnd(e)
         }
         if(mView.directionDefined && !mView.directionVert){
             mView.directionDefined = false;
             mView.directionVert = null;
-            console.log('---------------------------------END-----------------------')
             return;
         }
+
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
         mView.directionDefined = false;

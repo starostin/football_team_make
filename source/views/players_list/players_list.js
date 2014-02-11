@@ -24,14 +24,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     newItemWidth: 150,
     onScroll: function(posit, type, e){
-//        console.log('-=------------------------------SCROLL MOVE------------------------');
-//        console.log(e)
+        console.log('-=------------------------------SCROLL MOVE------------------------');
         if(this.scrollStarted){
             this.scroll = e;
         }
         var newItem = this.el.querySelector('.new-item'),
             position = posit>> 0,
             isNewAdded = this.el.querySelector('.added');
+        console.log(e)
 
         if (!isNewAdded) {
             var cosinus = (position)/this.newItemWidth,
@@ -53,8 +53,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.scrollStarted = true;
     },
     onScrollEnd: function(e){
-//        console.log('-=------------------------------SCROLL END------------------------');
-//        console.log(e)
         if(this.mScroll.swipe){
             console.log('------------------------END SWIPE---------------------')
         }
@@ -65,19 +63,21 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             a = str.split('('),
             b = a[1].split('deg'),
             deg = b[0];
+        console.log('-=------------------------------SCROLL END------------------------');
+        console.log(deg)
         if(deg <= 10 && !newItem.classList.contains('added')){
+            console.log('------------------------END ADD----------------------')
             scroll.mTopOffset = 0;
             scroll.scrollPosition = scroll.scrollPosition - this.newItemWidth;
             newItem.style.webkitTransform = 'rotateX(0deg)';
             newItem.classList.add('added')
         }else if(+deg && newItem.classList.contains('added')){
+            console.log('------------------------END REMOVE----------------------')
             scroll.mTopOffset = -this.newItemWidth;
             scroll.scrollPosition = this.newItemWidth + scroll.scrollPosition;
             newItem.style.webkitTransform = 'rotateX(90deg)';
             newItem.classList.remove('added')
         }
-        this.X = [];
-        this.Y = [];
     },
     onSwipe: function(e, index){
         var item = this.el.querySelector('[data-index="' + index +'"]'),
@@ -85,14 +85,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             scroll = this.mScroll;
         style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
         console.log(e)
-    },
-    direction: function(e){
-        return {
-            top: e.clientY < this.pos.Y,
-            left: e.clientX < this.pos.X,
-            topDown: e.clientY !== this.pos.Y,
-            leftRight: e.clientX !== this.pos.X
-        }
     },
     rotateItem: function(e){
         e.stopPropagation();
