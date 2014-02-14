@@ -141,7 +141,7 @@ function ScrollView(element, o) {
     };
 
     mView.scroll = function (shift, duration) {
-        mAnimator.animate(mView.scrollPosition, mView.scrollPosition + shift, duration, mView.setPosition);
+        mAnimator.animate(mView.scrollPosition, mView.scrollPosition + shift, duration, mView.setPosition, 'easeOutQuad');
     };
 
     mView.refresh = function () {

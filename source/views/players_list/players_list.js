@@ -11,7 +11,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .add': 'addPlayer',
         'click .sec': 'sec',
         'click ul .item': 'rotateItem',
-        'click .edit': 'editItem'
+        'click .edit': 'editItem',
+        'click .cancel': 'removeAdd'
     },
     pos: {},
     onInitialize: function(){
@@ -21,10 +22,15 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var newItem = this.el.querySelector('.new-item');
         newItem.style.webkitTransform = 'rotateX(90deg)';
         newItem.style.webkitTransformOrigin =  '50% 100%';
+//        window.scroll = this.mScroll;
+
+//        this.removed = false;
     },
     newItemWidth: 150,
     onScroll: function(posit, type, e){
-        console.log('-=------------------------------SCROLL MOVE------------------------');
+//        if(this.removed){
+//            return;
+//        }
         if(this.scrollStarted){
             this.scroll = e;
         }
@@ -32,7 +38,21 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             position = posit>> 0,
             isNewAdded = this.el.querySelector('.added');
         console.log(e)
-
+        if(this.removedAdd){
+            console.log('-=------------------------------SCROLL MOVE------------------------');
+            console.log(position);
+            var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth
+                deg = Math.acos(cosinus)*180/Math.PI;
+            if(position===-this.newItemWidth){
+                this.mScroll.mTopOffset = -this.newItemWidth;
+//                this.mScroll.scrollPosition = this.newItemWidth + this.mScroll.scrollPosition;
+                newItem.style.webkitTransform = 'rotateX(90deg)';
+                this.removedAdd = false;
+                this.mScroll.refresh();
+            }
+            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+            return;
+        }
         if (!isNewAdded) {
             var cosinus = (position)/this.newItemWidth,
                 deg = Math.acos(cosinus)*180/Math.PI;
@@ -41,12 +61,12 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
         } else if(e && isNewAdded && (position <= this.newItemWidth)){
-            var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth,
-                deg = Math.acos(cosinus)*180/Math.PI;
-            if(position > 0){
-                deg = 0;
-            }
-            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+//            var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth,
+//                deg = Math.acos(cosinus)*180/Math.PI;
+//            if(position > 0){
+//                deg = 0;
+//            }
+//            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
         }
     },
     onScrollStart: function(e){
@@ -72,11 +92,11 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             newItem.style.webkitTransform = 'rotateX(0deg)';
             newItem.classList.add('added')
         }else if(+deg && newItem.classList.contains('added')){
-            console.log('------------------------END REMOVE----------------------')
-            scroll.mTopOffset = -this.newItemWidth;
-            scroll.scrollPosition = this.newItemWidth + scroll.scrollPosition;
-            newItem.style.webkitTransform = 'rotateX(90deg)';
-            newItem.classList.remove('added')
+//            console.log('------------------------END REMOVE----------------------')
+//            scroll.mTopOffset = -this.newItemWidth;
+//            scroll.scrollPosition = this.newItemWidth + scroll.scrollPosition;
+//            newItem.style.webkitTransform = 'rotateX(90deg)';
+//            newItem.classList.remove('added')
         }
     },
     onSwipe: function(e, index){
@@ -98,6 +118,53 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             }, {silent: true})
             target.classList.add('rotate')
         }
+    },
+    removeAdd: function(e){
+        var newItem = this.el.querySelector('.new-item');
+        var self = this;
+        var fps = 15;
+        this.mScroll.scroll(-150, 270);
+        newItem.classList.remove('added')
+        this.removedAdd = true;
+
+//        newItem.classList.add('removing');
+//        newItem.style.webkitTransform = 'rotateX(90deg)';
+//        function removing() {
+//                this.requestId = webkitRequestAnimationFrame(removing);
+//                // описываем один шаганимации тут
+//                self.mScroll.scrollPosition = self.mScroll.scrollPosition - 3;
+//                self.mScroll.setPosition(self.mScroll.scrollPosition);
+//                var cosinus = (self.newItemWidth - Math.abs(self.mScroll.scrollPosition))/self.newItemWidth,
+//                    deg = Math.acos(cosinus)*180/Math.PI;
+////            if(position > 0){
+////                deg = 0;
+////            }
+//                console.log('---------------------------------------');
+//                console.log(deg);
+//                console.log(self.mScroll.scrollPosition)
+//                if(deg >= 11){
+//                    newItem.classList.remove('added')
+//                    window.webkitCancelRequestAnimationFrame(this.requestId);
+//                    self.onScroll(self.mScroll.scrollPosition, 'tweak')
+//                }
+//                newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+//        }
+//        removing();
+
+//        function removing(){
+//            console.log('============')
+//            self.mScroll.scrollPosition = self.mScroll.scrollPosition - 1;
+//            self.mScroll.setPosition(self.mScroll.scrollPosition);
+//            var cosinus = (self.newItemWidth - Math.abs(self.mScroll.scrollPosition))/self.newItemWidth,
+//                deg = Math.acos(cosinus)*180/Math.PI;
+////            if(position > 0){
+////                deg = 0;
+////            }
+//            console.log(deg)
+//            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+//            window.setTimeout(removing, 0);
+//        }
+//        removing();
     },
     editItem: function(e){
         e.stopPropagation();

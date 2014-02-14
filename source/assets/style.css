@@ -28,6 +28,10 @@ li {
     -webkit-perspective-origin-y: 100%;
     -webkit-transform-style: preserve-3d;
 }
+.new-item.removing{
+    -webkit-transition: 1s;
+    -webkit-transform: rotateX(90deg);
+}
 
 .new-item-container{
     -webkit-perspective: 800px;
