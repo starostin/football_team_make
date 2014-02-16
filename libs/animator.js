@@ -205,7 +205,6 @@ Animator.prototype = (function () {
     // ====================================================================================================
 
     proto.animate = function (startPosition, endPosition, duration, callback, easing) {
-        console.log(easing)
         var startTimestamp, firstIteration = true, tmpVariable, tmpTime, self = this, easingFunction,
             lastIteraction = false, state = this.isTweaking ? STRINGS.tweak : STRINGS.animation, tmpPosition;
 

@@ -22,89 +22,83 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var newItem = this.el.querySelector('.new-item');
         newItem.style.webkitTransform = 'rotateX(90deg)';
         newItem.style.webkitTransformOrigin =  '50% 100%';
-//        window.scroll = this.mScroll;
-
-//        this.removed = false;
+        window.scroll = this.mScroll;
     },
-    newItemWidth: 150,
+    newItemHeight: 150,
     onScroll: function(posit, type, e){
-//        if(this.removed){
-//            return;
-//        }
         if(this.scrollStarted){
             this.scroll = e;
         }
-        var newItem = this.el.querySelector('.new-item'),
+        var self = this,
+            newItem = this.el.querySelector('.new-item'),
             position = posit>> 0,
-            isNewAdded = this.el.querySelector('.added');
-        console.log(e)
+            isNewAdded = this.el.querySelector('.added'),
+            $overlay = $(document).find('#overlay'),
+            newItemHeight = this.newItemHeight,
+            scroll = this.mScroll,
+            cosinus,
+            deg;
+
         if(this.removedAdd){
-            console.log('-=------------------------------SCROLL MOVE------------------------');
-            console.log(position);
-            var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth
+                cosinus = (newItemHeight - Math.abs(position))/newItemHeight;
                 deg = Math.acos(cosinus)*180/Math.PI;
-            if(position===-this.newItemWidth){
-                this.mScroll.mTopOffset = -this.newItemWidth;
-//                this.mScroll.scrollPosition = this.newItemWidth + this.mScroll.scrollPosition;
+            if(position===-newItemHeight || !position){
+                $overlay.removeClass('show');
+                scroll.mTopOffset = -newItemHeight;
+                scroll.scrollPosition = newItemHeight + scroll.scrollPosition;
                 newItem.style.webkitTransform = 'rotateX(90deg)';
                 this.removedAdd = false;
+                this.render();
+                var $listHeight = this.$el.find('ul').height();
+                this.$el.find('ul').height($listHeight - newItemHeight);
                 this.mScroll.refresh();
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
             return;
         }
         if (!isNewAdded) {
-            var cosinus = (position)/this.newItemWidth,
+                cosinus = (position)/newItemHeight,
                 deg = Math.acos(cosinus)*180/Math.PI;
-            if(position > this.newItemWidth){
+            if(position > newItemHeight){
                 deg = 0;
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
-        } else if(e && isNewAdded && (position <= this.newItemWidth)){
-//            var cosinus = (this.newItemWidth - Math.abs(position))/this.newItemWidth,
-//                deg = Math.acos(cosinus)*180/Math.PI;
-//            if(position > 0){
-//                deg = 0;
-//            }
-//            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+        } else if(isNewAdded && (position <= newItemHeight) && position === 0 && this.updateListHeight){
+            this.updateListHeight = false;
+            this.mScroll.refresh();
         }
     },
     onScrollStart: function(e){
         this.scrollStarted = true;
     },
     onScrollEnd: function(e){
-        if(this.mScroll.swipe){
-            console.log('------------------------END SWIPE---------------------')
-        }
         this.scrollEnd = this.scroll;
         var newItem = this.el.querySelector('.new-item'),
             scroll = this.mScroll,
             str = newItem.style.webkitTransform,
             a = str.split('('),
             b = a[1].split('deg'),
-            deg = b[0];
-        console.log('-=------------------------------SCROLL END------------------------');
-        console.log(deg)
+            deg = b[0],
+            $listHeight;
+
         if(deg <= 10 && !newItem.classList.contains('added')){
-            console.log('------------------------END ADD----------------------')
             scroll.mTopOffset = 0;
-            scroll.scrollPosition = scroll.scrollPosition - this.newItemWidth;
+            scroll.scrollPosition = scroll.scrollPosition - this.newItemHeight;
             newItem.style.webkitTransform = 'rotateX(0deg)';
-            newItem.classList.add('added')
-        }else if(+deg && newItem.classList.contains('added')){
-//            console.log('------------------------END REMOVE----------------------')
-//            scroll.mTopOffset = -this.newItemWidth;
-//            scroll.scrollPosition = this.newItemWidth + scroll.scrollPosition;
-//            newItem.style.webkitTransform = 'rotateX(90deg)';
-//            newItem.classList.remove('added')
+            newItem.classList.add('added');
+            $listHeight = this.$el.find('ul').height();
+            this.$el.find('ul').height($listHeight + this.newItemHeight)
+            this.updateListHeight = true;
         }
     },
     onSwipe: function(e, index){
+        if(!e || !index){
+            return;
+        }
         var item = this.el.querySelector('[data-index="' + index +'"]'),
             style = item.style,
             scroll = this.mScroll;
         style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
-        console.log(e)
     },
     rotateItem: function(e){
         e.stopPropagation();
@@ -120,51 +114,16 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     removeAdd: function(e){
-        var newItem = this.el.querySelector('.new-item');
-        var self = this;
-        var fps = 15;
+        if(this.mScroll.scrollPosition !==0){
+            return;
+        }
+        var newItem = this.el.querySelector('.new-item'),
+            $overlay = $(document).find('#overlay');
+
+        $overlay.addClass('show');
         this.mScroll.scroll(-150, 270);
-        newItem.classList.remove('added')
+        newItem.classList.remove('added');
         this.removedAdd = true;
-
-//        newItem.classList.add('removing');
-//        newItem.style.webkitTransform = 'rotateX(90deg)';
-//        function removing() {
-//                this.requestId = webkitRequestAnimationFrame(removing);
-//                // описываем один шаганимации тут
-//                self.mScroll.scrollPosition = self.mScroll.scrollPosition - 3;
-//                self.mScroll.setPosition(self.mScroll.scrollPosition);
-//                var cosinus = (self.newItemWidth - Math.abs(self.mScroll.scrollPosition))/self.newItemWidth,
-//                    deg = Math.acos(cosinus)*180/Math.PI;
-////            if(position > 0){
-////                deg = 0;
-////            }
-//                console.log('---------------------------------------');
-//                console.log(deg);
-//                console.log(self.mScroll.scrollPosition)
-//                if(deg >= 11){
-//                    newItem.classList.remove('added')
-//                    window.webkitCancelRequestAnimationFrame(this.requestId);
-//                    self.onScroll(self.mScroll.scrollPosition, 'tweak')
-//                }
-//                newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
-//        }
-//        removing();
-
-//        function removing(){
-//            console.log('============')
-//            self.mScroll.scrollPosition = self.mScroll.scrollPosition - 1;
-//            self.mScroll.setPosition(self.mScroll.scrollPosition);
-//            var cosinus = (self.newItemWidth - Math.abs(self.mScroll.scrollPosition))/self.newItemWidth,
-//                deg = Math.acos(cosinus)*180/Math.PI;
-////            if(position > 0){
-////                deg = 0;
-////            }
-//            console.log(deg)
-//            newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
-//            window.setTimeout(removing, 0);
-//        }
-//        removing();
     },
     editItem: function(e){
         e.stopPropagation();
@@ -179,7 +138,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     addPlayer: function(){
         var self = this,
-            addedItem = this.el.querySelector('.added');
+            addedItem = this.el.querySelector('.added'),
+            $listHeight;
 
         addedItem.classList.add('rotate');
         addedItem.addEventListener('webkitTransitionEnd', function(){
@@ -190,7 +150,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                     rate: 8,
                     class: ''
                 });
+            $listHeight = self.$el.find('ul').height();
+            self.$el.find('ul').height($listHeight - self.newItemHeight)
+            self.mScroll.refresh()
         })
-
     }
 }));
