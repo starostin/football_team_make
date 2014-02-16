@@ -1009,8 +1009,14 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
             onScrollEnd: function(e){
                 self.onScrollEnd(e)
             },
+            onSwipeEnd: function(e, index){
+                self.onSwipeEnd(e, index)
+            },
             onScrollStart: function(e){
                 self.onScrollStart(e)
+            },
+            onSwipeStart: function(e, index){
+                self.onSwipeStart(e, index)
             },
             onSwipe: function(e, index){
                 self.onSwipe(e, index)

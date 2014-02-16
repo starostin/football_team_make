@@ -40,13 +40,15 @@ function ScrollView(element, o) {
         mView.X.push(e.clientX);
         mView.Y.push(e.clientY);
         mView.beginElIndex = e.origin.target.parentNode.getAttribute('data-index');
-        if(typeof o.onScrollStart === 'function'){
-            o.onScrollStart(e)
+        if(mView.directionDefined){
+            if(typeof o.onScrollStart === 'function' && mView.directionVert){
+                o.onScrollStart(e);
+            }else if(typeof o.onSwipeStart === 'function' && !mView.directionVert){
+                o.onSwipeStart(e, mView.beginElIndex)
+            }
         }
-//        if(mView.directionDefined){
-            mAnimator.stop();
-            mLastPointerCoordinate = e[mCoordProp];
-//        }
+        mAnimator.stop();
+        mLastPointerCoordinate = e[mCoordProp];
 
     }
     function directionVert(xArr, yArr){
@@ -91,15 +93,18 @@ function ScrollView(element, o) {
     function eventPointerUp(e) {
         mView.X = [];
         mView.Y = [];
-        if(typeof o.onScrollEnd === 'function'){
-            o.onScrollEnd(e)
-        }
+
         if(mView.directionDefined && !mView.directionVert){
             mView.directionDefined = false;
             mView.directionVert = null;
+            if(typeof o.onSwipeEnd === 'function'){
+                o.onSwipeEnd(e, mView.beginElIndex)
+            }
             return;
         }
-
+        if(typeof o.onScrollEnd === 'function'){
+            o.onScrollEnd(e)
+        }
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
         mView.directionDefined = false;

@@ -26,6 +26,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     newItemHeight: 150,
     onScroll: function(posit, type, e){
+        console.log('----------------SCROLL-----------------')
         if(this.scrollStarted){
             this.scroll = e;
         }
@@ -45,7 +46,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             if(position===-newItemHeight || !position){
                 $overlay.removeClass('show');
                 scroll.mTopOffset = -newItemHeight;
-                scroll.scrollPosition = newItemHeight + scroll.scrollPosition;
+//                scroll.scrollPosition = newItemHeight + scroll.scrollPosition;
                 newItem.style.webkitTransform = 'rotateX(90deg)';
                 this.removedAdd = false;
                 this.render();
@@ -56,7 +57,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
             return;
         }
-        if (!isNewAdded) {
+        if (!isNewAdded && position >=0) {
                 cosinus = (position)/newItemHeight,
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position > newItemHeight){
@@ -69,9 +70,11 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     onScrollStart: function(e){
+        console.log('----------------------------------SCROLL START---------------------------')
         this.scrollStarted = true;
     },
     onScrollEnd: function(e){
+        console.log('----------------------------------SCROLL END---------------------------')
         this.scrollEnd = this.scroll;
         var newItem = this.el.querySelector('.new-item'),
             scroll = this.mScroll,
@@ -92,6 +95,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     onSwipe: function(e, index){
+        console.log('----------------------------SWIPE--------------------------')
+        console.log(e)
         if(!e || !index){
             return;
         }
@@ -100,7 +105,46 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             scroll = this.mScroll;
         style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
     },
+    onSwipeStart: function(e){
+        this.swipeFirst = {
+            coord: e.clientX,
+            timestamp: e.timeStamp
+        };
+        console.log(e)
+        console.log('-------------------SWIPE START------------------')
+    },
+    onSwipeEnd: function(e, index){
+        this.swipeLast = {
+            coord: e.clientX,
+            timestamp: e.timeStamp
+        };
+        var self = this,
+            item = this.el.querySelector('[data-index="' + index +'"]');
+        var speed = (this.swipeFirst.coord - this.swipeLast.coord)/(this.swipeLast.timestamp - this.swipeFirst.timestamp);
+        var fromRight = item.getBoundingClientRect().right,
+            width = item.getBoundingClientRect().width,
+            player = this.model.at(index);
+        item.style.webkitTransition = 0.5 + "s";
+        if(width - fromRight > 200){
+            item.style.webkitTransform = 'translate3d(-1000px, 0, 0)';
+            item.addEventListener('webkitTransitionEnd', function(){
+                console.log(player)
+                self.model.remove(player, {silent: true});
+                $(item).remove();
+                item.style.webkitTransition = '';
+            })
+        }else{
+            item.style.webkitTransform = 'translate3d(0, 0, 0)';
+            item.addEventListener('webkitTransitionEnd', function(){
+                item.style.webkitTransition = '';
+            });
+        }
+
+        console.log(item.getBoundingClientRect());
+        console.log('-------------------SWIPE END------------------')
+    },
     rotateItem: function(e){
+        console.log('-------------------ROTATE ITEM------------------')
         e.stopPropagation();
         if(!this.scrollEnd && e.target.classList.contains('back')){
             var target = e.currentTarget,
