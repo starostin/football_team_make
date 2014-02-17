@@ -15,6 +15,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .cancel': 'removeAdd'
     },
     pos: {},
+    playersForRemove: [],
     onInitialize: function(){
         this.model = RAD.models.players;
     },
@@ -26,7 +27,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     newItemHeight: 150,
     onScroll: function(posit, type, e){
-        console.log('----------------SCROLL-----------------')
         if(this.scrollStarted){
             this.scroll = e;
         }
@@ -70,11 +70,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     onScrollStart: function(e){
-        console.log('----------------------------------SCROLL START---------------------------')
         this.scrollStarted = true;
     },
     onScrollEnd: function(e){
-        console.log('----------------------------------SCROLL END---------------------------')
         this.scrollEnd = this.scroll;
         var newItem = this.el.querySelector('.new-item'),
             scroll = this.mScroll,
@@ -119,19 +117,28 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var speed = (this.swipeFirst.coord - this.swipeLast.coord)/(this.swipeLast.timestamp - this.swipeFirst.timestamp);
         var fromRight = item.getBoundingClientRect().right,
             width = item.getBoundingClientRect().width,
-            player = this.model.at(index);
+            playerId = +item.getAttribute('data-id'),
+            player = this.model.get(playerId),
+            $listHeight;
 
         this.swiping = true;
-        item.style.webkitTransition = 0.5 + "s";
+        item.style.webkitTransition = 0.3 + "s";
         if(width - fromRight > 200){
             item.style.webkitTransform = 'translate3d(-' + width + 'px, 0, 0)';
             item.addEventListener('webkitTransitionEnd', function(){
-                console.log('-------------------REMOVING-----------------')
-                console.log(index)
                 self.model.remove(player, {silent: true});
-                $(item).remove();
-                item.style.webkitTransition = '';
-                self.swiping = false;
+                var $remove = $(item).find('.remove');
+                $remove.addClass('hide');
+                $(item).addClass('remove')
+                $remove.on('webkitTransitionEnd', function(){
+                    $(item).remove();
+                    self.swiping = false;
+                    $listHeight = self.$el.find('ul').height();
+                    self.$el.find('ul').height($listHeight - self.newItemHeight)
+                    var scrollTo = self.mScroll.scrollPosition;
+                    self.mScroll.refresh();
+                    self.mScroll.setPosition(scrollTo)
+                })
             })
         }else{
             item.style.webkitTransform = 'translate3d(0, 0, 0)';
@@ -142,12 +149,11 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     rotateItem: function(e){
-        console.log('-------------------ROTATE ITEM------------------')
         e.stopPropagation();
         if(!this.scrollEnd && e.target.classList.contains('back') && !this.swiping){
             var target = e.currentTarget,
-                index = +target.getAttribute('data-index'),
-                player = this.model.at(index);
+                playerId = +target.getAttribute('data-id'),
+                player = this.model.get(playerId);
 
             player.set({
                 class: 'rotate'
@@ -171,8 +177,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         e.stopPropagation();
         var target = e.currentTarget,
             playerEl = target.parentNode.parentNode,
-            index = +playerEl.getAttribute('data-index'),
-            player = this.model.at(index);
+            playerId = +playerEl.getAttribute('data-id'),
+            player = this.model.get(playerId);
         player.set({
             class: ''
         }, {silent: true})
@@ -187,7 +193,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         addedItem.addEventListener('webkitTransitionEnd', function(){
             self.model.unshift(
                 {
-                    id: Math.random(),
+                    id: parseInt(Math.random()*100),
                     name: 'oleg',
                     rate: 8,
                     class: ''

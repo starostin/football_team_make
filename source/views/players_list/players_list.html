@@ -14,14 +14,16 @@
     {{# if(model.length) { }}
     {{# _(model).each(function(player, index) { }}
         <li>
-            <div class="item {{ player.class }}" data-index="{{ index }}" >
+            <div class="item {{ player.class }}" data-index="{{ index }}" data-id="{{ player.id }}">
                 <div class="back">
                     <h1>BACK</h1>
                 </div>
+                <div class="remove">REMOVE</div>
                 <div class="front">
                     <button class="edit">Edit</button>
                 </div>
             </div>
+
         </li>
     {{# }); }}
     {{# } }}

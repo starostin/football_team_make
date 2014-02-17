@@ -67,10 +67,12 @@ function ScrollView(element, o) {
         if(Math.abs(mView.X[mView.X.length-1] - e.clientX)>10 && !mView.directionDefined){
             mView.directionVert = false;
             mView.directionDefined = true;
+            eventPointerDown(e)
         }
         if(Math.abs(mView.Y[mView.Y.length-1] - e.clientY)>10 && !mView.directionDefined){
             mView.directionVert = true;
             mView.directionDefined = true;
+            eventPointerDown(e)
         }
         mView.X.push(e.clientX);
         mView.Y.push(e.clientY);
