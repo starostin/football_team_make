@@ -95,8 +95,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     onSwipe: function(e, index){
-        console.log('----------------------------SWIPE--------------------------')
-        console.log(e)
         if(!e || !index){
             return;
         }
@@ -110,8 +108,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             coord: e.clientX,
             timestamp: e.timeStamp
         };
-        console.log(e)
-        console.log('-------------------SWIPE START------------------')
     },
     onSwipeEnd: function(e, index){
         this.swipeLast = {
@@ -124,29 +120,31 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var fromRight = item.getBoundingClientRect().right,
             width = item.getBoundingClientRect().width,
             player = this.model.at(index);
+
+        this.swiping = true;
         item.style.webkitTransition = 0.5 + "s";
         if(width - fromRight > 200){
-            item.style.webkitTransform = 'translate3d(-1000px, 0, 0)';
+            item.style.webkitTransform = 'translate3d(-' + width + 'px, 0, 0)';
             item.addEventListener('webkitTransitionEnd', function(){
-                console.log(player)
+                console.log('-------------------REMOVING-----------------')
+                console.log(index)
                 self.model.remove(player, {silent: true});
                 $(item).remove();
                 item.style.webkitTransition = '';
+                self.swiping = false;
             })
         }else{
             item.style.webkitTransform = 'translate3d(0, 0, 0)';
             item.addEventListener('webkitTransitionEnd', function(){
                 item.style.webkitTransition = '';
+                self.swiping = false;
             });
         }
-
-        console.log(item.getBoundingClientRect());
-        console.log('-------------------SWIPE END------------------')
     },
     rotateItem: function(e){
         console.log('-------------------ROTATE ITEM------------------')
         e.stopPropagation();
-        if(!this.scrollEnd && e.target.classList.contains('back')){
+        if(!this.scrollEnd && e.target.classList.contains('back') && !this.swiping){
             var target = e.currentTarget,
                 index = +target.getAttribute('data-index'),
                 player = this.model.at(index);

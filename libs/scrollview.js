@@ -105,6 +105,7 @@ function ScrollView(element, o) {
         if(typeof o.onScrollEnd === 'function'){
             o.onScrollEnd(e)
         }
+        console.log()
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
         mView.directionDefined = false;
