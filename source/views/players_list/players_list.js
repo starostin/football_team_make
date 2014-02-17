@@ -97,41 +97,30 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             return;
         }
         var item = this.el.querySelector('[data-index="' + index +'"]'),
-            style = item.style,
-            scroll = this.mScroll;
+            style = item.style;
+
         style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
     },
     onSwipeStart: function(e){
-        this.swipeFirst = {
-            coord: e.clientX,
-            timestamp: e.timeStamp
-        };
     },
     onSwipeEnd: function(e, index){
-        this.swipeLast = {
-            coord: e.clientX,
-            timestamp: e.timeStamp
-        };
         var self = this,
-            item = this.el.querySelector('[data-index="' + index +'"]');
-        var speed = (this.swipeFirst.coord - this.swipeLast.coord)/(this.swipeLast.timestamp - this.swipeFirst.timestamp);
-        var fromRight = item.getBoundingClientRect().right,
+            item = this.el.querySelector('[data-index="' + index +'"]'),
+            fromRight = item.getBoundingClientRect().right,
             width = item.getBoundingClientRect().width,
             playerId = +item.getAttribute('data-id'),
             player = this.model.get(playerId),
             $listHeight;
 
         this.swiping = true;
-        item.style.webkitTransition = 0.3 + "s";
+        item.style.webkitTransform = '';
         if(width - fromRight > 200){
-            item.style.webkitTransform = 'translate3d(-' + width + 'px, 0, 0)';
+            item.classList.add('swipe_left');
             item.addEventListener('webkitTransitionEnd', function(){
                 self.model.remove(player, {silent: true});
-                var $remove = $(item).find('.remove');
-                $remove.addClass('hide');
-                $(item).addClass('remove')
-                $remove.on('webkitTransitionEnd', function(){
-                    $(item).remove();
+                item.classList.add('delete');
+                item.addEventListener('webkitTransitionEnd', function(){
+                    item.parentNode.removeChild(item);
                     self.swiping = false;
                     $listHeight = self.$el.find('ul').height();
                     self.$el.find('ul').height($listHeight - self.newItemHeight)
@@ -141,9 +130,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 })
             })
         }else{
-            item.style.webkitTransform = 'translate3d(0, 0, 0)';
+            item.classList.add('swipe_right');
             item.addEventListener('webkitTransitionEnd', function(){
-                item.style.webkitTransition = '';
+                item.classList.remove('swipe_right');
                 self.swiping = false;
             });
         }
