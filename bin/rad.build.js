@@ -1003,6 +1003,7 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
             direction: 'vertical',
             bounds: true,
             swipeTargetClass: 'back',
+            topOffset: -150,
             onScroll: function(pos, type, e){
                 self.onScroll(pos, type, e)
             },

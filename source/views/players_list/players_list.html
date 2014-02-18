@@ -1,5 +1,5 @@
 {{# console.log('----------------------------------------RENDER------------------------')}}
-<ul>
+<ul class="list">
     <div class="new-item-container">
         <div class="new-item">
             <div class="front">
@@ -13,7 +13,7 @@
     </div>
     {{# if(model.length) { }}
     {{# _(model).each(function(player, index) { }}
-        <li>
+        <li class="player">
             <div class="item {{ player.class }}" data-index="{{ index }}" data-id="{{ player.id }}">
                 <div class="back">
                     <h1>BACK</h1>
@@ -23,7 +23,6 @@
                     <button class="edit">Edit</button>
                 </div>
             </div>
-
         </li>
     {{# }); }}
     {{# } }}

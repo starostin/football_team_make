@@ -30,7 +30,7 @@ function ScrollView(element, o) {
 
         mTransitionArray = [],
         eventFling;
-        mView.mTopOffset = -150;
+        mView.mTopOffset = o.topOffset;
         mView.X = [];
         mView.Y = [];
 
@@ -99,7 +99,7 @@ function ScrollView(element, o) {
         if(mView.directionDefined && !mView.directionVert){
             mView.directionDefined = false;
             mView.directionVert = null;
-            if(typeof o.onSwipeEnd === 'function'){
+            if(typeof o.onSwipeEnd === 'function' && e && mView.beginElIndex){
                 o.onSwipeEnd(e, mView.beginElIndex)
             }
             return;
@@ -107,7 +107,6 @@ function ScrollView(element, o) {
         if(typeof o.onScrollEnd === 'function'){
             o.onScrollEnd(e)
         }
-        console.log()
         mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), true);
         mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
         mView.directionDefined = false;
@@ -205,7 +204,8 @@ function ScrollView(element, o) {
     mView.setPosition = (function (enableListener) {
         if (enableListener) {
             return function (position, force, typeOfMotion, e) {
-                mView.scrollPosition = force ? position : mAnimator.checkBounds(position);
+//                mView.scrollPosition = force ? position : mAnimator.checkBounds(position);
+                position= position >> 0;
                 mView.scrollPosition = position
                 mTransitionArray[1] = mView.mTopOffset + mView.scrollPosition;
                 mScrollingWrapper.style[mTransformName] = mTransitionArray.join("");

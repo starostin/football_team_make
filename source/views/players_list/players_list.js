@@ -10,7 +10,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     events: {
         'click .add': 'addPlayer',
         'click .sec': 'sec',
-        'click ul .item': 'rotateItem',
+        'click .item': 'rotateItem',
         'click .edit': 'editItem',
         'click .cancel': 'removeAdd'
     },
@@ -50,8 +50,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 newItem.style.webkitTransform = 'rotateX(90deg)';
                 this.removedAdd = false;
                 this.render();
-                var $listHeight = this.$el.find('ul').height();
-                this.$el.find('ul').height($listHeight - newItemHeight);
+                var $listHeight = this.$el.find('.list').height();
+                this.$el.find('.list').height($listHeight - newItemHeight);
                 this.mScroll.refresh();
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
@@ -87,8 +87,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             scroll.scrollPosition = scroll.scrollPosition - this.newItemHeight;
             newItem.style.webkitTransform = 'rotateX(0deg)';
             newItem.classList.add('added');
-            $listHeight = this.$el.find('ul').height();
-            this.$el.find('ul').height($listHeight + this.newItemHeight)
+            $listHeight = this.$el.find('.list').height();
+            this.$el.find('.list').height($listHeight + this.newItemHeight)
             this.updateListHeight = true;
         }
     },
@@ -110,20 +110,28 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             width = item.getBoundingClientRect().width,
             playerId = +item.getAttribute('data-id'),
             player = this.model.get(playerId),
+            overlay = document.querySelector('#overlay'),
+            allItems = this.el.querySelectorAll('.player'),
             $listHeight;
 
+        overlay.classList.add('show');
         this.swiping = true;
         item.style.webkitTransform = '';
         if(width - fromRight > 200){
             item.classList.add('swipe_left');
             item.addEventListener('webkitTransitionEnd', function(){
                 self.model.remove(player, {silent: true});
-                item.classList.add('delete');
+                for(var i=0; i<allItems.length; i++){
+                    allItems[i].classList.add('delete')
+                }
+                $(item).closest("li").remove();
+//                item.parentNode ? item.parentNode.removeChild(item) : '';
                 item.addEventListener('webkitTransitionEnd', function(){
-                    item.parentNode.removeChild(item);
+                    overlay.classList.remove('show');
+                    item.parentNode ? item.parentNode.removeChild(item) : '';
                     self.swiping = false;
-                    $listHeight = self.$el.find('ul').height();
-                    self.$el.find('ul').height($listHeight - self.newItemHeight)
+                    $listHeight = self.$el.find('.list').height();
+                    self.$el.find('.list').height($listHeight - self.newItemHeight)
                     var scrollTo = self.mScroll.scrollPosition;
                     self.mScroll.refresh();
                     self.mScroll.setPosition(scrollTo)
@@ -132,6 +140,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }else{
             item.classList.add('swipe_right');
             item.addEventListener('webkitTransitionEnd', function(){
+                overlay.classList.remove('show');
                 item.classList.remove('swipe_right');
                 self.swiping = false;
             });
@@ -158,7 +167,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             $overlay = $(document).find('#overlay');
 
         $overlay.addClass('show');
-        this.mScroll.scroll(-150, 270);
+        this.mScroll.scroll(-this.newItemHeight, 270);
         newItem.classList.remove('added');
         this.removedAdd = true;
     },
@@ -187,8 +196,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                     rate: 8,
                     class: ''
                 });
-            $listHeight = self.$el.find('ul').height();
-            self.$el.find('ul').height($listHeight - self.newItemHeight)
+            $listHeight = self.$el.find('.list').height();
+            self.$el.find('.list').height($listHeight - self.newItemHeight)
             self.mScroll.refresh()
         })
     }
