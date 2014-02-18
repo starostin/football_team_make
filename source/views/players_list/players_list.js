@@ -112,6 +112,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             player = this.model.get(playerId),
             overlay = document.querySelector('#overlay'),
             allItems = this.el.querySelectorAll('.player'),
+            removedLi = $(item).closest("li"),
             $listHeight;
 
         overlay.classList.add('show');
@@ -124,9 +125,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 for(var i=0; i<allItems.length; i++){
                     allItems[i].classList.add('delete')
                 }
-                $(item).closest("li").remove();
+                removedLi.remove();
 //                item.parentNode ? item.parentNode.removeChild(item) : '';
-                item.addEventListener('webkitTransitionEnd', function(){
+                removedLi.on('webkitTransitionEnd', function(){
                     overlay.classList.remove('show');
                     item.parentNode ? item.parentNode.removeChild(item) : '';
                     self.swiping = false;
