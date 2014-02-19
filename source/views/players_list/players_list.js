@@ -17,8 +17,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     listHeight: 0,
     onInitialize: function(){
         this.model = RAD.models.players;
-    },
-    onStartAttach: function(){
         this.createListStyles(".list li:nth-child({0})", 50, 1);
     },
     createListStyles: function(rulePattern, rows, cols) {
@@ -50,8 +48,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         if(this.scrollStarted){
             this.scroll = e;
         }
-        var self = this,
-            newItem = this.el.querySelector('.new-item'),
+        var newItem = this.el.querySelector('.new-item'),
             position = posit>> 0,
             isNewAdded = this.el.querySelector('.added'),
             $overlay = $(document).find('#overlay'),
@@ -66,19 +63,16 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             if(position===-newItemHeight || !position){
                 $overlay.removeClass('show');
                 scroll.mTopOffset = -newItemHeight;
-//                scroll.scrollPosition = newItemHeight + scroll.scrollPosition;
                 newItem.style.webkitTransform = 'rotateX(90deg)';
                 this.removedAdd = false;
                 this.render();
-                this.listHeight = this.listHeight - 150;
-                this.$el.find('.list').height(this.listHeight);
-                this.mScroll.refresh();
+                this.calculateListHeight('remove')
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
             return;
         }
         if (!isNewAdded && position >=0) {
-                cosinus = (position)/newItemHeight,
+                cosinus = (position)/newItemHeight;
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position > newItemHeight){
                 deg = 0;
@@ -86,7 +80,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
         } else if(isNewAdded && (position <= newItemHeight) && position === 0 && this.updateListHeight){
             this.updateListHeight = false;
-            this.mScroll.refresh();
+            this.calculateListHeight('add');
         }
     },
     onScrollStart: function(e){
@@ -106,8 +100,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             scroll.scrollPosition = scroll.scrollPosition - this.newItemHeight;
             newItem.style.webkitTransform = 'rotateX(0deg)';
             newItem.classList.add('added');
-            this.listHeight = this.listHeight + 150;
-            this.$el.find('.list').height(this.listHeight);
             this.updateListHeight = true;
         }
     },
@@ -120,49 +112,61 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
         style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
     },
-    onSwipeStart: function(e){
+    onSwipeStart: function(e, index){
+        var fakeEl = this.el.querySelector('.fake'),
+            item = this.el.querySelector('[data-index="' + index +'"]'),
+            removedLi = item.parentNode,
+            top = removedLi.getBoundingClientRect().top - 40;
+
+        fakeEl.style.top = top + 'px';
     },
     onSwipeEnd: function(e, index){
         var self = this,
             item = this.el.querySelector('[data-index="' + index +'"]'),
-            fromRight = item.getBoundingClientRect().right,
-            width = item.getBoundingClientRect().width,
+            itemCoord = item.getBoundingClientRect(),
             playerId = +item.getAttribute('data-id'),
             player = this.model.get(playerId),
             overlay = document.querySelector('#overlay'),
-            removedLi = $(item).closest("li"),
-            top = removedLi.offset().top - 40,
+            removedLi = item.parentNode,
             fakeEl = this.el.querySelector('.fake');
-        console.log(top)
 
         overlay.classList.add('show');
         this.swiping = true;
         item.style.webkitTransform = '';
-        if(width - fromRight > 200){
+        if(itemCoord.width - itemCoord.right > 200){
             item.classList.add('swipe_left');
-            item.addEventListener('webkitTransitionEnd', function(){
+            $(item).one('webkitTransitionEnd', function(){
                 self.model.remove(player, {silent: true});
-                fakeEl.style.top = top + 'px';
-                fakeEl.style.opacity = 1;
-                removedLi.remove();
-                removedLi.on('webkitTransitionEnd', function(){
+                removedLi.parentNode.removeChild(removedLi);
+                fakeEl.classList.add('hide');
+                $(fakeEl).one('webkitTransitionEnd', function(){
                     overlay.classList.remove('show');
+                    fakeEl.classList.remove('hide');
+                    fakeEl.style.top = '';
                     self.swiping = false;
-                    self.listHeight = self.listHeight - 150;
-                    self.$el.find('.list').height(self.listHeight);
                     var scrollTo = self.mScroll.scrollPosition;
-                    self.mScroll.refresh();
+                    self.calculateListHeight('remove');
                     self.mScroll.setPosition(scrollTo)
                 })
             })
         }else{
             item.classList.add('swipe_right');
-            item.addEventListener('webkitTransitionEnd', function(){
+            $(item).one('webkitTransitionEnd', function(){
+                fakeEl.style.top = '';
                 overlay.classList.remove('show');
                 item.classList.remove('swipe_right');
                 self.swiping = false;
             });
         }
+    },
+    calculateListHeight: function(type){
+        if(type === 'remove'){
+            this.listHeight = this.listHeight - 150;
+        }else if(type === 'add'){
+            this.listHeight = this.listHeight + 150;
+        }
+        this.$el.find('.list').height(this.listHeight);
+        this.mScroll.refresh();
     },
     rotateItem: function(e){
         e.stopPropagation();
@@ -173,7 +177,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
 
             player.set({
                 class: 'rotate'
-            }, {silent: true})
+            }, {silent: true});
             target.classList.add('rotate')
         }
     },
@@ -197,13 +201,12 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             player = this.model.get(playerId);
         player.set({
             class: ''
-        }, {silent: true})
+        }, {silent: true});
         playerEl.classList.remove('rotate')
     },
     addPlayer: function(){
         var self = this,
-            addedItem = this.el.querySelector('.added'),
-            $listHeight;
+            addedItem = this.el.querySelector('.added');
 
         addedItem.classList.add('rotate');
         addedItem.addEventListener('webkitTransitionEnd', function(){
@@ -214,8 +217,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                     rate: 8,
                     class: ''
                 });
-            self.$el.find('.list').height(self.listHeight);
-            self.mScroll.refresh()
+            self.calculateListHeight();
         })
     }
 }));
