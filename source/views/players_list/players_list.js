@@ -14,10 +14,30 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .edit': 'editItem',
         'click .cancel': 'removeAdd'
     },
-    pos: {},
-    playersForRemove: [],
+    listHeight: 0,
     onInitialize: function(){
         this.model = RAD.models.players;
+    },
+    onStartAttach: function(){
+        this.createListStyles(".list li:nth-child({0})", 50, 1);
+    },
+    createListStyles: function(rulePattern, rows, cols) {
+        var rules = [], index = 0;
+        for (var rowIndex = 0; rowIndex < rows; rowIndex++) {
+            for (var colIndex = 0; colIndex < cols; colIndex++) {
+                var x = (colIndex * 100) + "%",
+                    y = (rowIndex * 100) + "%",
+                    transforms = "{ -webkit-transform: translate3d(" + x + ", " + y + ", 0); transform: translate3d(" + x + ", " + y + ", 0); }";
+                rules.push(rulePattern.replace("{0}", ++index) + transforms);
+            }
+        }
+        var headElem = document.getElementsByTagName("head")[0],
+            styleElem = $("<style>").attr("type", "text/css").appendTo(headElem)[0];
+        if (styleElem.styleSheet) {
+            styleElem.styleSheet.cssText = rules.join("\n");
+        } else {
+            styleElem.textContent = rules.join("\n");
+        }
     },
     onEndRender: function(){
         var newItem = this.el.querySelector('.new-item');
@@ -50,8 +70,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 newItem.style.webkitTransform = 'rotateX(90deg)';
                 this.removedAdd = false;
                 this.render();
-                var $listHeight = this.$el.find('.list').height();
-                this.$el.find('.list').height($listHeight - newItemHeight);
+                this.listHeight = this.listHeight - 150;
+                this.$el.find('.list').height(this.listHeight);
                 this.mScroll.refresh();
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
@@ -79,16 +99,15 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             str = newItem.style.webkitTransform,
             a = str.split('('),
             b = a[1].split('deg'),
-            deg = b[0],
-            $listHeight;
+            deg = b[0];
 
         if(deg <= 10 && !newItem.classList.contains('added')){
             scroll.mTopOffset = 0;
             scroll.scrollPosition = scroll.scrollPosition - this.newItemHeight;
             newItem.style.webkitTransform = 'rotateX(0deg)';
             newItem.classList.add('added');
-            $listHeight = this.$el.find('.list').height();
-            this.$el.find('.list').height($listHeight + this.newItemHeight)
+            this.listHeight = this.listHeight + 150;
+            this.$el.find('.list').height(this.listHeight);
             this.updateListHeight = true;
         }
     },
@@ -111,9 +130,10 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             playerId = +item.getAttribute('data-id'),
             player = this.model.get(playerId),
             overlay = document.querySelector('#overlay'),
-            allItems = this.el.querySelectorAll('.player'),
             removedLi = $(item).closest("li"),
-            $listHeight;
+            top = removedLi.offset().top - 40,
+            fakeEl = this.el.querySelector('.fake');
+        console.log(top)
 
         overlay.classList.add('show');
         this.swiping = true;
@@ -122,17 +142,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             item.classList.add('swipe_left');
             item.addEventListener('webkitTransitionEnd', function(){
                 self.model.remove(player, {silent: true});
-                for(var i=0; i<allItems.length; i++){
-                    allItems[i].classList.add('delete')
-                }
+                fakeEl.style.top = top + 'px';
+                fakeEl.style.opacity = 1;
                 removedLi.remove();
-//                item.parentNode ? item.parentNode.removeChild(item) : '';
                 removedLi.on('webkitTransitionEnd', function(){
                     overlay.classList.remove('show');
-                    item.parentNode ? item.parentNode.removeChild(item) : '';
                     self.swiping = false;
-                    $listHeight = self.$el.find('.list').height();
-                    self.$el.find('.list').height($listHeight - self.newItemHeight)
+                    self.listHeight = self.listHeight - 150;
+                    self.$el.find('.list').height(self.listHeight);
                     var scrollTo = self.mScroll.scrollPosition;
                     self.mScroll.refresh();
                     self.mScroll.setPosition(scrollTo)
@@ -197,8 +214,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                     rate: 8,
                     class: ''
                 });
-            $listHeight = self.$el.find('.list').height();
-            self.$el.find('.list').height($listHeight - self.newItemHeight)
+            self.$el.find('.list').height(self.listHeight);
             self.mScroll.refresh()
         })
     }
