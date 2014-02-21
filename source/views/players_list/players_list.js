@@ -12,12 +12,39 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .sec': 'sec',
         'click .item': 'rotateItem',
         'click .edit': 'editItem',
-        'click .cancel': 'removeAdd'
+        'click .cancel': 'removeAdd',
+        'tapdown .thumb': 'startMoveSlider'
     },
     listHeight: 0,
     onInitialize: function(){
         this.model = RAD.models.players;
         this.createListStyles(".list li:nth-child({0})", 50, 1);
+    },
+    startMoveSlider: function(e){
+        var self = this;
+        var thumbElem = e.target;
+        var thumbCoords = thumbElem.getBoundingClientRect();
+        var sliderElem = thumbElem.parentNode;
+        var shiftX = e.originalEvent.tapdown.screenX - thumbCoords.left;
+        var sliderCoords = sliderElem.getBoundingClientRect();
+        this.el.addEventListener('tapmove', moveSlider, false);
+        function moveSlider(e){
+            var newLeft = e.tapmove.screenX - shiftX - sliderCoords.left;
+
+            if (newLeft < 0) {
+                newLeft = 0;
+            }
+            var rightEdge = sliderElem.offsetWidth - thumbElem.offsetWidth;
+            if (newLeft > rightEdge) {
+                newLeft = rightEdge;
+            }
+
+            thumbElem.style.webkitTransform = 'translateX(' + newLeft + 'px)';
+        }
+        this.el.addEventListener('tapup', function(){
+            self.el.removeEventListener('tapmove', moveSlider, false);
+            self.el.removeEventListener('tapup');
+        }, false);
     },
     createListStyles: function(rulePattern, rows, cols) {
         var rules = [], index = 0;
@@ -44,12 +71,11 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         window.scroll = this.mScroll;
     },
     newItemHeight: 150,
-    onScroll: function(posit, type, e){
+    onScroll: function(position, type, e){
         if(this.scrollStarted){
             this.scroll = e;
         }
         var newItem = this.el.querySelector('.new-item'),
-            position = posit>> 0,
             isNewAdded = this.el.querySelector('.added'),
             $overlay = $(document).find('#overlay'),
             newItemHeight = this.newItemHeight,
@@ -104,15 +130,20 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         }
     },
     onSwipe: function(e, index){
-        if(!e || !index){
+        if(!e || !index || e.origin.target.classList.contains('front')){
             return;
         }
+        console.log(e)
         var item = this.el.querySelector('[data-index="' + index +'"]'),
             style = item.style;
 
         style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
     },
     onSwipeStart: function(e, index){
+        console.log(e)
+        if(!e || !index || e.origin.target.classList.contains('front')){
+            return;
+        }
         var fakeEl = this.el.querySelector('.fake'),
             item = this.el.querySelector('[data-index="' + index +'"]'),
             removedLi = item.parentNode,

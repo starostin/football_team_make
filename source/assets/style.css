@@ -124,3 +124,23 @@ html, body, .container {
 .new-item.rotate .back {
     -webkit-transform: rotateX(0deg);
 }
+/*----------------------------------------SLYDER----------------------------------------*/
+.slider {
+    border-radius: 5px;
+    background: #E0E0E0;
+    background: -moz-linear-gradient(left top , #E0E0E0, #EEEEEE) repeat scroll 0 0 transparent;
+    background: -webkit-gradient(linear, left top, right bottom, from(#E0E0E0), to(#EEEEEE));
+    background: linear-gradient(left top, #E0E0E0, #EEEEEE);
+    width: 310px;
+    height: 15px;
+    margin: 60px;
+}
+.thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 3px;
+    position: relative;
+    top: -5px;
+    background: blue;
+    cursor: pointer;
+}

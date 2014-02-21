@@ -35,6 +35,9 @@ function ScrollView(element, o) {
         mView.Y = [];
 
     function eventPointerDown(e) {
+        if(e.origin.target.classList.contains('thumb')){
+            return;
+        }
         mView.X = [];
         mView.Y = [];
         mView.X.push(e.clientX);
@@ -63,7 +66,9 @@ function ScrollView(element, o) {
     }
 
     function eventPointerMove(e) {
-
+        if(e.origin.target.classList.contains('thumb')){
+            return;
+        }
         if(Math.abs(mView.X[mView.X.length-1] - e.clientX)>10 && !mView.directionDefined){
             mView.directionVert = false;
             mView.directionDefined = true;
@@ -93,6 +98,9 @@ function ScrollView(element, o) {
     }
 
     function eventPointerUp(e) {
+        if(e.origin.target.classList.contains('thumb')){
+            return;
+        }
         mView.X = [];
         mView.Y = [];
 
@@ -164,8 +172,9 @@ function ScrollView(element, o) {
     mView.handleEvent = function (e) {
         switch (e.type) {
         case STRINGS.fling:
-            if (mAnimator.inBounds(mView.scrollPosition))
+            if (mView.directionDefined && mView.directionVert && mAnimator.inBounds(mView.scrollPosition)){
                 eventFling(e);
+            }
             break;
         case STRINGS.pointerdown:
             eventPointerDown(e);
