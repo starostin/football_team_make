@@ -5,6 +5,12 @@
             <div class="front">
                 <button class="add">Add</button>
                 <button class="cancel">Cancel</button>
+                <div class="slider">
+                    <div class="thumb"></div>
+                </div>
+                <div class="rate">0</div>
+                <label>Name</label>
+                <input class="name" type="text"/>
             </div>
             <div class="back">
                 <h1>BACK</h1>
@@ -21,9 +27,13 @@
                 <div class="remove">REMOVE</div>
                 <div class="front">
                     <button class="edit">Edit</button>
-                    <div id="slider" class="slider">
-                        <div class="thumb"></div>
+                    <div class="slider">
+                        {{# var rate = Math.round( player.rate * RAD.core.getView('view.players_list').coef);}}
+                        <div class="thumb" style="-webkit-transform: translateX({{ rate }}px);"></div>
                     </div>
+                    <div class="rate">{{ player.rate }}</div>
+                    <label>Name</label>
+                    <input class="name" type="text" value="{{ player.name }}"/>
                 </div>
             </div>
         </li>

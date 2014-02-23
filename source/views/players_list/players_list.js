@@ -13,12 +13,28 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .item': 'rotateItem',
         'click .edit': 'editItem',
         'click .cancel': 'removeAdd',
-        'tapdown .thumb': 'startMoveSlider'
+        'tapdown .thumb': 'startMoveSlider',
+        'keyup .name': 'enterName'
     },
     listHeight: 0,
+    rateSystem: 100,
+    coef: 2.6,
     onInitialize: function(){
         this.model = RAD.models.players;
         this.createListStyles(".list li:nth-child({0})", 50, 1);
+    },
+    enterName: function(e){
+        var target = e.currentTarget;
+        var $playerEl = $(target).closest('.player');
+        var name = target.value;
+        console.log($playerEl)
+        if($playerEl.length){
+            var playerId = +$playerEl.find('.item').data('id')
+            var player = this.model.get(playerId);
+            player.set({
+                name: name
+            }, {silent: true});
+        }
     },
     startMoveSlider: function(e){
         var self = this;
@@ -27,6 +43,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var sliderElem = thumbElem.parentNode;
         var shiftX = e.originalEvent.tapdown.screenX - thumbCoords.left;
         var sliderCoords = sliderElem.getBoundingClientRect();
+        this.sliderWidth = sliderCoords.width - thumbCoords.width;
         this.el.addEventListener('tapmove', moveSlider, false);
         function moveSlider(e){
             var newLeft = e.tapmove.screenX - shiftX - sliderCoords.left;
@@ -38,6 +55,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             if (newLeft > rightEdge) {
                 newLeft = rightEdge;
             }
+            self.updateRate(newLeft, sliderElem);
 
             thumbElem.style.webkitTransform = 'translateX(' + newLeft + 'px)';
         }
@@ -45,6 +63,19 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             self.el.removeEventListener('tapmove', moveSlider, false);
             self.el.removeEventListener('tapup');
         }, false);
+    },
+    updateRate: function(number, el){
+        var rateEl = el.nextElementSibling;
+        var rate = Math.round(number/this.coef);
+        var $playerEl = $(el).closest('.player');
+        if($playerEl.length){
+            var playerId = +$playerEl.find('.item').data('id')
+            var player = this.model.get(playerId);
+            player.set({
+                rate: rate
+            }, {silent: true});
+        }
+        rateEl.innerHTML = rate
     },
     createListStyles: function(rulePattern, rows, cols) {
         var rules = [], index = 0;
@@ -137,7 +168,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         var item = this.el.querySelector('[data-index="' + index +'"]'),
             style = item.style;
 
-        style.webkitTransform = 'translate3d(-' + (scroll.X[0] - e.clientX) + 'px, 0, 0)';
+        style.webkitTransform = 'translate3d(-' + (this.mScroll.X[0] - e.clientX) + 'px, 0, 0)';
     },
     onSwipeStart: function(e, index){
         console.log(e)
@@ -231,7 +262,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             playerId = +playerEl.getAttribute('data-id'),
             player = this.model.get(playerId);
         player.set({
-            class: ''
+            class: '',
+            name: playerEl.querySelector('.name').value
         }, {silent: true});
         playerEl.classList.remove('rotate')
     },
@@ -244,8 +276,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             self.model.unshift(
                 {
                     id: parseInt(Math.random()*100),
-                    name: 'oleg',
-                    rate: 8,
+                    name: addedItem.querySelector('.name').value,
+                    rate: +addedItem.querySelector('.rate').innerHTML,
                     class: ''
                 });
             self.calculateListHeight();

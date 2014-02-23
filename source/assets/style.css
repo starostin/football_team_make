@@ -1,9 +1,23 @@
 .players-list{
     position: absolute;
     top: 40px;
-    bottom: 0;
+    bottom: 80px;
     width: 100%;
     overflow: auto;
+}
+.header{
+    width: 100%;
+    position: absolute;
+    background: yellow;
+    height: 40px;
+    top: 0;
+}
+.footer{
+    width: 100%;
+    position: absolute;
+    background: yellow;
+    height: 80px;
+    bottom: 0;
 }
 /*---------------------------------- Add player ----------------------------------------------*/
 html, body, .container {
@@ -126,14 +140,13 @@ html, body, .container {
 }
 /*----------------------------------------SLYDER----------------------------------------*/
 .slider {
-    border-radius: 5px;
+    display: inline-block;
     background: #E0E0E0;
     background: -moz-linear-gradient(left top , #E0E0E0, #EEEEEE) repeat scroll 0 0 transparent;
     background: -webkit-gradient(linear, left top, right bottom, from(#E0E0E0), to(#EEEEEE));
     background: linear-gradient(left top, #E0E0E0, #EEEEEE);
     width: 310px;
     height: 15px;
-    margin: 60px;
 }
 .thumb {
     width: 50px;
@@ -143,4 +156,14 @@ html, body, .container {
     top: -5px;
     background: blue;
     cursor: pointer;
+}
+.rate{
+    display: inline-block;
+    line-height: 50px;
+    width: 50px;
+    font-size: 30px;
+    text-align: center;
+    height: 50px;
+    background: white;
+    border: 1px solid black;
 }
