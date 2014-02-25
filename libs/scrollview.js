@@ -123,7 +123,7 @@ function ScrollView(element, o) {
 
     function eventResize() {
         clearTimeout(mView.resizeTimeout);
-        mView.resizeTimeout = setTimeout(mView.reflow, 150);
+        mView.resizeTimeout = setTimeout(mView.reflow, 150, true);
     }
 
     mView._calculateMaxScroll = function () {
@@ -134,7 +134,8 @@ function ScrollView(element, o) {
         mAnimator.animate(mView.scrollPosition, mView.scrollPosition + shift, duration, mView.setPosition, 'easeOutQuad');
     };
 
-    mView.refresh = function () {
+    mView.refresh = function (flag) {
+        console.log('----------------------REFRESH--------------------')
 
         mAnimator.stop();
 
@@ -143,12 +144,17 @@ function ScrollView(element, o) {
 //        if (mScrollingWrapper[mParentProp]) {
 //            mAnimator.tweakIfNeeded(mView.scrollPosition, mView.setPosition);
 //        } else {
+        if(!flag){
             mView.setPosition(0);
+        }
+
 //        }
     };
 
-    mView.reflow = function () {
+    mView.reflow = function (flag) {
         var container = mView.container, tmpHeight = container.offsetHeight, tmpWidth = container.offsetWidth;
+        console.log('-----------------reflow-----------------------')
+        console.log(flag);
 
         if ((tmpHeight === 0) || (tmpHeight === mParentHeight && tmpWidth === mParentWidth)) {
             return;
@@ -157,7 +163,7 @@ function ScrollView(element, o) {
         mView._ParentSize = container[mParentProp];
         mParentHeight = tmpHeight;
         mParentWidth = tmpWidth;
-        mView.refresh();
+        mView.refresh(flag);
     };
 
     mView.getMaxPosition = function () {
@@ -211,6 +217,7 @@ function ScrollView(element, o) {
     })(mDirection === STRINGS.vertical);
 
     mView.setPosition = (function (enableListener) {
+        console.log('--------------------SET POSITION------------------')
         if (enableListener) {
             return function (position, force, typeOfMotion, e) {
 //                mView.scrollPosition = force ? position : mAnimator.checkBounds(position);

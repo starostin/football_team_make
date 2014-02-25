@@ -14,7 +14,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .edit': 'editItem',
         'click .cancel': 'removeAdd',
         'tapdown .thumb': 'startMoveSlider',
-        'keyup .name': 'enterName'
+        'keyup .name': 'enterName',
+        'focus .name': 'focus'
     },
     listHeight: 0,
     rateSystem: 100,
@@ -23,11 +24,23 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.model = RAD.models.players;
         this.createListStyles(".list li:nth-child({0})", 50, 1);
     },
+    focus: function(){
+        var listHeight = this.listHeight,
+            height;
+
+        if(listHeight && this.mScroll.scrollPosition){
+            height = this.mScroll.scrollPosition - 346;
+            this.mScroll.setPosition(height)
+        }else if(!this.mScroll.scrollPosition && listHeight>334){
+            height = -346 + (this.mScroll._ParentSize - listHeight);
+            this.mScroll.setPosition(height)
+        }
+    },
     enterName: function(e){
         var target = e.currentTarget;
         var $playerEl = $(target).closest('.player');
         var name = target.value;
-        console.log($playerEl)
+        console.log($playerEl);
         if($playerEl.length){
             var playerId = +$playerEl.find('.item').data('id')
             var player = this.model.get(playerId);
@@ -75,7 +88,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 rate: rate
             }, {silent: true});
         }
-        rateEl.innerHTML = rate
+        rateEl.innerHTML = rate;
     },
     createListStyles: function(rulePattern, rows, cols) {
         var rules = [], index = 0;
