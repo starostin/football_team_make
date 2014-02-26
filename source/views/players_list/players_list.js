@@ -192,7 +192,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             removedLi = item.parentNode,
             fakeEl = this.el.querySelector('.fake');
 
-        overlay.classList.add('show');
+
+//        overlay.classList.add('show');
+        console.log(item.getBoundingClientRect());
         this.swiping = true;
         item.style.webkitTransform = '';
         if(itemCoord.width - itemCoord.right > 200){
@@ -211,7 +213,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                     self.mScroll.setPosition(scrollTo)
                 })
             })
-        }else{
+        }else if(itemCoord.left){
             item.classList.add('swipe_right');
             $(item).one('webkitTransitionEnd', function(){
                 fakeEl.style.top = '';
@@ -219,6 +221,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 item.classList.remove('swipe_right');
                 self.swiping = false;
             });
+        }else{
+            fakeEl.style.top = '';
         }
     },
     calculateListHeight: function(type){

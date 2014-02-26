@@ -146,13 +146,15 @@ function ScrollView(element, o) {
         if(!flag){
             mView.setPosition(0);
         }else{
-            if(mView.elemCoord.bottom>mView._ParentSize){
-                console.log(mView._MaxScroll - (mView.oldScroll._MaxScroll - mView.oldScroll.scrollPosition + mView._ParentSize - mView.elemCoord.bottom - 40))
-                mView.setPosition(mView._MaxScroll - (mView.oldScroll._MaxScroll - mView.oldScroll.scrollPosition + mView._ParentSize - mView.elemCoord.bottom - 40));
+            if(mView.oldScroll._ParentSize > mView._ParentSize){
+            if(mView.elemCoord.bottom-40 > mView._ParentSize){
+                console.log(mView.oldScroll._MaxScroll + mView.oldScroll.scrollPosition + mView.oldScroll._ParentSize - mView.elemCoord.bottom + 40)
+                mView.setPosition(-(mView._MaxScroll - (mView.oldScroll._MaxScroll + mView.oldScroll.scrollPosition + mView.oldScroll._ParentSize - mView.elemCoord.bottom + 40)));
             }
-//            mView.setPosition(-(mView.elemCoord.bottom - 40 - mView._ParentSize));
+            }else{
+                mView.setPosition(mView.oldScroll.scrollPosition)
+            }
         }
-//        }
     };
 
     mView.reflow = function (flag) {
@@ -265,7 +267,8 @@ function ScrollView(element, o) {
         mView.elemCoord = elem.getBoundingClientRect();
         mView.oldScroll = {
             _MaxScroll: mView._MaxScroll,
-            scrollPosition: mView.scrollPosition
+            scrollPosition: mView.scrollPosition,
+            _ParentSize: mView._ParentSize
         }
 
     });
