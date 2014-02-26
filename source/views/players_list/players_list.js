@@ -14,8 +14,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         'click .edit': 'editItem',
         'click .cancel': 'removeAdd',
         'tapdown .thumb': 'startMoveSlider',
-        'keyup .name': 'enterName',
-        'focus .name': 'focus'
+        'keyup .name': 'enterName'
     },
     listHeight: 0,
     rateSystem: 100,
@@ -23,18 +22,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     onInitialize: function(){
         this.model = RAD.models.players;
         this.createListStyles(".list li:nth-child({0})", 50, 1);
-    },
-    focus: function(){
-        var listHeight = this.listHeight,
-            height;
-
-        if(listHeight && this.mScroll.scrollPosition){
-            height = this.mScroll.scrollPosition - 346;
-            this.mScroll.setPosition(height)
-        }else if(!this.mScroll.scrollPosition && listHeight>334){
-            height = -346 + (this.mScroll._ParentSize - listHeight);
-            this.mScroll.setPosition(height)
-        }
     },
     enterName: function(e){
         var target = e.currentTarget;

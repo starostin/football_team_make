@@ -135,7 +135,6 @@ function ScrollView(element, o) {
     };
 
     mView.refresh = function (flag) {
-        console.log('----------------------REFRESH--------------------')
 
         mAnimator.stop();
 
@@ -146,15 +145,18 @@ function ScrollView(element, o) {
 //        } else {
         if(!flag){
             mView.setPosition(0);
+        }else{
+            if(mView.elemCoord.bottom>mView._ParentSize){
+                console.log(mView._MaxScroll - (mView.oldScroll._MaxScroll - mView.oldScroll.scrollPosition + mView._ParentSize - mView.elemCoord.bottom - 40))
+                mView.setPosition(mView._MaxScroll - (mView.oldScroll._MaxScroll - mView.oldScroll.scrollPosition + mView._ParentSize - mView.elemCoord.bottom - 40));
+            }
+//            mView.setPosition(-(mView.elemCoord.bottom - 40 - mView._ParentSize));
         }
-
 //        }
     };
 
     mView.reflow = function (flag) {
         var container = mView.container, tmpHeight = container.offsetHeight, tmpWidth = container.offsetWidth;
-        console.log('-----------------reflow-----------------------')
-        console.log(flag);
 
         if ((tmpHeight === 0) || (tmpHeight === mParentHeight && tmpWidth === mParentWidth)) {
             return;
@@ -217,7 +219,6 @@ function ScrollView(element, o) {
     })(mDirection === STRINGS.vertical);
 
     mView.setPosition = (function (enableListener) {
-        console.log('--------------------SET POSITION------------------')
         if (enableListener) {
             return function (position, force, typeOfMotion, e) {
 //                mView.scrollPosition = force ? position : mAnimator.checkBounds(position);
@@ -258,6 +259,16 @@ function ScrollView(element, o) {
 
     mView.reflow();
     window.addEventListener('resize', eventResize, false);
+    $('input').bind('focus', function(){
+        var inp = $(this)[0],
+            elem = inp.parentNode;
+        mView.elemCoord = elem.getBoundingClientRect();
+        mView.oldScroll = {
+            _MaxScroll: mView._MaxScroll,
+            scrollPosition: mView.scrollPosition
+        }
+
+    });
     //==================================================================
 
     return mView;
