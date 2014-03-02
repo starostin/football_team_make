@@ -28,7 +28,7 @@
                 <div class="front">
                     <button class="edit">Edit</button>
                     <div class="slider">
-                        {{# var rate = Math.round( player.rate * RAD.core.getView('view.players_list').coef);}}
+                        {{# var rate = Math.round( player.rate * RAD.core.getView('view.players_list').sliderCoef);}}
                         <div class="thumb" style="-webkit-transform: translateX({{ rate }}px);"></div>
                     </div>
                     <div class="rate">{{ player.rate }}</div>

@@ -12,10 +12,12 @@
         // Views
         "source/views/login/login.js",
         "source/views/main_screen/main_screen.js",
-        "source/views/players_list/players_list.js"
+        "source/views/players_list/players_list.js",
 
         // Service
 
+        // Utils
+        "source/utils.js"
     ];
 
     function onEndLoad() {

@@ -1004,31 +1004,39 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
             self.mScroll = null;
             scrollContainer.gestureAdapter.destroy()
         }
-
-        self.mScroll = new ScrollView(scrollContainer, {
+        var options = {
             direction: 'vertical',
             bounds: true,
-            swipeTargetClass: 'back',
-            topOffset: -150,
             onScroll: function(pos, type, e){
-                self.onScroll(pos, type, e)
+                if(self.onScroll && typeof self.onScroll === 'function')
+                    self.onScroll(pos, type, e)
             },
             onScrollEnd: function(e){
-                self.onScrollEnd(e)
+                if(self.onScrollEnd && typeof self.onScrollEnd === 'function')
+                    self.onScrollEnd(e)
             },
             onSwipeEnd: function(e, index){
-                self.onSwipeEnd(e, index)
+                if(self.onSwipeEnd && typeof self.onSwipeEnd === 'function')
+                    self.onSwipeEnd(e, index)
             },
             onScrollStart: function(e){
-                self.onScrollStart(e)
+                if(self.onScrollStart && typeof self.onScrollStart === 'function')
+                    self.onScrollStart(e)
             },
             onSwipeStart: function(e, index){
-                self.onSwipeStart(e, index)
+                if(self.onSwipeStart && typeof self.onSwipeStart === 'function')
+                    self.onSwipeStart(e, index)
             },
             onSwipe: function(e, index){
-                self.onSwipe(e, index)
+                if(self.onSwipe && typeof self.onSwipe === 'function')
+                    self.onSwipe(e, index)
             }
-        });
+        };
+        if(self.scrollOptions){
+            _.extend(options, self.scrollOptions)
+        }
+
+        self.mScroll = new ScrollView(scrollContainer, options);
 
         gestureAdapter = new GestureAdapter(scrollContainer, self.mScroll);
         scrollContainer.scrollView = self.mScroll;
