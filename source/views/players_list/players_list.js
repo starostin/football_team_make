@@ -23,6 +23,26 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.model = RAD.models.players;
         this.createListStyles(".list li:nth-child({0})", 50, 1);
     },
+    moveItemToBottom: function(elem){
+        var self = this,
+            elemCoord = elem.getBoundingClientRect();
+
+        this.oldPosition = this.mScroll.scrollPosition;
+        this.itemInBottom = true;
+        window.setTimeout(function(){
+            self.mScroll.setPosition(-(elemCoord.bottom - 190) + self.mScroll.scrollPosition);
+        }, 0);
+
+        this.stopScroll();
+    },
+    moveItemInNormalPos: function(){
+        var self = this;
+        this.itemInBottom = false;
+        window.setTimeout(function(){
+            self.mScroll.setPosition(self.oldPosition);
+        }, 0);
+        this.startScroll();
+    },
     enterName: function(e){
         var target = e.currentTarget;
         var $playerEl = $(target).closest('.player');
@@ -138,6 +158,8 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         } else if(isNewAdded && (position <= newItemHeight) && position === 0 && this.updateListHeight){
             this.updateListHeight = false;
             this.calculateListHeight('add');
+            this.itemInBottom = true;
+            this.stopScroll();
         }
     },
     onScrollStart: function(e){
@@ -222,6 +244,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 self.swiping = false;
             });
         }else{
+            this.swiping = false;
             fakeEl.style.top = '';
         }
     },
@@ -235,6 +258,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.mScroll.refresh();
     },
     rotateItem: function(e){
+        if(this.itemInBottom){
+            return;
+        }
         e.stopPropagation();
         if(!this.scrollEnd && e.target.classList.contains('back') && !this.swiping){
             var target = e.currentTarget,
@@ -245,12 +271,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 class: 'rotate'
             }, {silent: true});
             target.classList.add('rotate')
+            this.moveItemToBottom(target)
         }
     },
     removeAdd: function(e){
         if(this.mScroll.scrollPosition !==0){
             return;
         }
+
         var newItem = this.el.querySelector('.new-item'),
             $overlay = $(document).find('#overlay');
 
@@ -258,9 +286,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.mScroll.scroll(-this.newItemHeight, 270);
         newItem.classList.remove('added');
         this.removedAdd = true;
+        this.itemInBottom = false;
     },
     editItem: function(e){
-        e.stopPropagation();
         var target = e.currentTarget,
             playerEl = target.parentNode.parentNode,
             playerId = +playerEl.getAttribute('data-id'),
@@ -270,6 +298,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             name: playerEl.querySelector('.name').value
         }, {silent: true});
         playerEl.classList.remove('rotate')
+        this.moveItemInNormalPos()
     },
     addPlayer: function(){
         var self = this,
@@ -285,6 +314,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                     class: ''
                 });
             self.calculateListHeight();
+            self.itemInBottom = false;
         })
     }
 }));

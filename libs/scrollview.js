@@ -30,9 +30,9 @@ function ScrollView(element, o) {
 
         mTransitionArray = [],
         eventFling;
-        mView.mTopOffset = o.topOffset;
-        mView.X = [];
-        mView.Y = [];
+    mView.mTopOffset = o.topOffset;
+    mView.X = [];
+    mView.Y = [];
 
     function eventPointerDown(e) {
         if(e.origin.target.classList.contains('thumb')){
@@ -44,7 +44,7 @@ function ScrollView(element, o) {
         mView.Y.push(e.clientY);
         mView.beginElIndex = e.origin.target.parentNode.getAttribute('data-index');
         if(mView.directionDefined){
-            if(typeof o.onScrollStart === 'function' && mView.directionVert){
+            if(typeof o.onScrollStart === 'function' && mView.directionVert && !mView.stopVert){
                 o.onScrollStart(e);
             }else if(typeof o.onSwipeStart === 'function' && !mView.directionVert){
                 o.onSwipeStart(e, mView.beginElIndex)
@@ -87,7 +87,7 @@ function ScrollView(element, o) {
             mView.directionDefined = true;
             eventPointerDown(e)
         }
-        if((mView.directionDefined && mView.directionVert) || (mView.X.length<10 && !mView.directionDefined)){
+        if(((mView.directionDefined && mView.directionVert) || (mView.X.length<10 && !mView.directionDefined)) && !mView.stopVert){
             mView.setPosition(mView.scrollPosition - (mLastPointerCoordinate - e[mCoordProp]), null, null, e);
             mLastPointerCoordinate = e[mCoordProp];
         }else if(mView.directionDefined && !mView.directionVert){
@@ -112,6 +112,9 @@ function ScrollView(element, o) {
             }
             return;
         }
+        if(mView.stopVert){
+            return;
+        }
         if(typeof o.onScrollEnd === 'function'){
             o.onScrollEnd(e)
         }
@@ -122,6 +125,7 @@ function ScrollView(element, o) {
     }
 
     function eventResize() {
+        console.log('-------------------------RESIZE----------------------')
         clearTimeout(mView.resizeTimeout);
         mView.resizeTimeout = setTimeout(mView.reflow, 150, true);
     }
@@ -145,15 +149,6 @@ function ScrollView(element, o) {
 //        } else {
         if(!flag){
             mView.setPosition(0);
-        }else{
-            if(mView.oldScroll._ParentSize > mView._ParentSize){
-            if(mView.elemCoord.bottom-40 > mView._ParentSize){
-                console.log(mView.oldScroll._MaxScroll + mView.oldScroll.scrollPosition + mView.oldScroll._ParentSize - mView.elemCoord.bottom + 40)
-                mView.setPosition(-(mView._MaxScroll - (mView.oldScroll._MaxScroll + mView.oldScroll.scrollPosition + mView.oldScroll._ParentSize - mView.elemCoord.bottom + 40)));
-            }
-            }else{
-                mView.setPosition(mView.oldScroll.scrollPosition)
-            }
         }
     };
 
@@ -181,21 +176,21 @@ function ScrollView(element, o) {
 
     mView.handleEvent = function (e) {
         switch (e.type) {
-        case STRINGS.fling:
-            if (mView.directionDefined && mView.directionVert && mAnimator.inBounds(mView.scrollPosition)){
-                eventFling(e);
-            }
-            break;
-        case STRINGS.pointerdown:
-            eventPointerDown(e);
-            break;
-        case STRINGS.pointermove:
-            e.origin.preventDefault();
-            eventPointerMove(e);
-            break;
-        case STRINGS.pointerup:
-            eventPointerUp(e);
-            break;
+            case STRINGS.fling:
+                if (mView.directionDefined && mView.directionVert && mAnimator.inBounds(mView.scrollPosition) && !mView.stopVert){
+                    eventFling(e);
+                }
+                break;
+            case STRINGS.pointerdown:
+                eventPointerDown(e);
+                break;
+            case STRINGS.pointermove:
+                e.origin.preventDefault();
+                eventPointerMove(e);
+                break;
+            case STRINGS.pointerup:
+                eventPointerUp(e);
+                break;
         }
         e.release();
     };
@@ -261,17 +256,6 @@ function ScrollView(element, o) {
 
     mView.reflow();
     window.addEventListener('resize', eventResize, false);
-    $('input').bind('focus', function(){
-        var inp = $(this)[0],
-            elem = inp.parentNode;
-        mView.elemCoord = elem.getBoundingClientRect();
-        mView.oldScroll = {
-            _MaxScroll: mView._MaxScroll,
-            scrollPosition: mView.scrollPosition,
-            _ParentSize: mView._ParentSize
-        }
-
-    });
     //==================================================================
 
     return mView;

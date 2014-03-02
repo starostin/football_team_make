@@ -992,6 +992,12 @@ RAD.namespace('RAD.Blanks.ScrollableView', RAD.Blanks.View.extend({
         var self = this,
             gestureAdapter,
             scrollContainer = document.querySelector('.scroll-view') || self.el;
+        self.stopScroll = function(){
+            self.mScroll.stopVert = true
+        };
+        self.startScroll = function(){
+            self.mScroll.stopVert = false
+        };
 
         if (self.mScroll) {
             self.mScroll.destroy();

@@ -19,7 +19,7 @@
     <script type="text/javascript" src="libs/utils.js"></script>
     <script type="text/javascript" src="libs/objectpool.js"></script>
     <script type="text/javascript" src="libs/gestureadapter.js"></script>
-    <!--<script type="text/javascript" src="cordova.js"></script>-->
+    <script type="text/javascript" src="cordova.js"></script>
 
     <!-- RAD.js -->
     <script type="text/javascript" src="bin/rad.build.js"></script>
@@ -34,5 +34,17 @@
 <div id="screen"></div>
 <!--для блокировки экрана от случайных нажатий при анимациях-->
 <div id="overlay"></div>
+<script type="text/javascript">
+    function onDeviceReady() {
+        console.log('--------------------READY-------------------');
+        if (parseFloat(window.device.version) >= 7.0) {
+            document.body.style.marginTop = "20px";
+            document.body.style.height = screen.availHeight + 'px';
+        }
+    }
+
+
+    document.addEventListener('deviceready', onDeviceReady, false);
+</script>
 </body>
 </html>
