@@ -8,11 +8,11 @@
 RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     url: 'source/views/players_list/players_list.html',
     events: {
-        'click .add': 'addPlayer',
-        'click .sec': 'sec',
-        'click .item': 'rotateItem',
-        'click .edit': 'editItem',
-        'click .cancel': 'removeAdd',
+        'tap .add': 'addPlayer',
+        'tap .sec': 'sec',
+        'tap .item': 'rotateItem',
+        'tap .edit': 'editItem',
+        'tap .cancel': 'removeAdd',
         'tapdown .thumb': 'startMoveSlider',
         'keyup .name': 'enterName'
     },
@@ -41,8 +41,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.marginTop = this.el.getBoundingClientRect().top;
     },
     defineSliderCoef: function(){
-        var slider = this.el.querySelector('.slider').getBoundingClientRect().width,
-            thumb = this.el.querySelector('.thumb').getBoundingClientRect().width;
+        var slider = this.$el.find('.slider').width(),
+            thumb = this.$el.find('.thumb').width();
+
         this.sliderCoef = (slider - thumb)/this.rateSystem;
     },
     moveItemToBottom: function(elem){
