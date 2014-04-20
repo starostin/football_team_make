@@ -208,7 +208,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             removedLi = item.parentNode,
             fakeEl = this.el.querySelector('.fake');
 
-//        overlay.classList.add('show');
+        overlay.classList.add('show');
         this.swiping = true;
         item.style.webkitTransform = '';
         if(itemCoord.width - itemCoord.right > 200){
@@ -218,7 +218,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 removedLi.parentNode.removeChild(removedLi);
                 fakeEl.classList.add('hide');
                 $(fakeEl).one('webkitTransitionEnd', function(){
-//                    overlay.classList.remove('show');
+                    overlay.classList.remove('show');
                     fakeEl.classList.remove('hide');
                     fakeEl.style.top = '';
                     self.swiping = false;
@@ -231,14 +231,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             item.classList.add('swipe_right');
             $(item).one('webkitTransitionEnd', function(){
                 fakeEl.style.top = '';
-//                overlay.classList.remove('show');
+                overlay.classList.remove('show');
                 item.classList.remove('swipe_right');
                 self.swiping = false;
             });
         }else{
             this.swiping = false;
             fakeEl.style.top = '';
-//            overlay.classList.remove('show');
+            overlay.classList.remove('show');
         }
     },
     calculateListHeight: function(type){
@@ -251,7 +251,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.mScroll.refresh();
     },
     rotateItem: function(e){
-        if(this.itemInBottom){
+        if(this.itemInBottom || this.mScroll.scrollPosition > 0){
             return;
         }
         e.stopPropagation();
