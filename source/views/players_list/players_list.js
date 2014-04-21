@@ -9,6 +9,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     url: 'source/views/players_list/players_list.html',
     events: {
         'tap .add': 'addPlayer',
+        'tap .sec': 'sec',
         'tap .item': 'rotateItem',
         'tap .edit': 'editItem',
         'tap .cancel': 'removeAdd',
@@ -24,7 +25,6 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     onInitialize: function(){
         this.model = RAD.models.players;
-        this.stopListening(this.model);
         RAD.utils.createListStyles(".list li:nth-child({0})", 50, 1);
     },
     onEndRender: function(){
@@ -41,8 +41,9 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.marginTop = this.el.getBoundingClientRect().top;
     },
     defineSliderCoef: function(){
-        var slider = this.el.querySelector('.slider').getBoundingClientRect().width,
-            thumb = this.el.querySelector('.thumb').getBoundingClientRect().width;
+        var slider = this.$el.find('.slider').width(),
+            thumb = this.$el.find('.thumb').width();
+
         this.sliderCoef = (slider - thumb)/this.rateSystem;
     },
     moveItemToBottom: function(elem){
@@ -208,7 +209,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             removedLi = item.parentNode,
             fakeEl = this.el.querySelector('.fake');
 
-//        overlay.classList.add('show');
+        overlay.classList.add('show');
         this.swiping = true;
         item.style.webkitTransform = '';
         if(itemCoord.width - itemCoord.right > 200){
@@ -218,7 +219,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 removedLi.parentNode.removeChild(removedLi);
                 fakeEl.classList.add('hide');
                 $(fakeEl).one('webkitTransitionEnd', function(){
-//                    overlay.classList.remove('show');
+                    overlay.classList.remove('show');
                     fakeEl.classList.remove('hide');
                     fakeEl.style.top = '';
                     self.swiping = false;
@@ -231,14 +232,14 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             item.classList.add('swipe_right');
             $(item).one('webkitTransitionEnd', function(){
                 fakeEl.style.top = '';
-//                overlay.classList.remove('show');
+                overlay.classList.remove('show');
                 item.classList.remove('swipe_right');
                 self.swiping = false;
             });
         }else{
             this.swiping = false;
             fakeEl.style.top = '';
-//            overlay.classList.remove('show');
+            overlay.classList.remove('show');
         }
     },
     calculateListHeight: function(type){
@@ -251,7 +252,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
         this.mScroll.refresh();
     },
     rotateItem: function(e){
-        if(this.itemInBottom){
+        if(this.itemInBottom || this.mScroll.scrollPosition > 0){
             return;
         }
         e.stopPropagation();
