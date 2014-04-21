@@ -8,11 +8,10 @@
 RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     url: 'source/views/players_list/players_list.html',
     events: {
-        'click .add': 'addPlayer',
-        'click .sec': 'sec',
-        'click .item': 'rotateItem',
-        'click .edit': 'editItem',
-        'click .cancel': 'removeAdd',
+        'tap .add': 'addPlayer',
+        'tap .item': 'rotateItem',
+        'tap .edit': 'editItem',
+        'tap .cancel': 'removeAdd',
         'tapdown .thumb': 'startMoveSlider',
         'keyup .name': 'enterName'
     },
@@ -25,6 +24,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
     },
     onInitialize: function(){
         this.model = RAD.models.players;
+        this.stopListening(this.model);
         RAD.utils.createListStyles(".list li:nth-child({0})", 50, 1);
     },
     onEndRender: function(){
