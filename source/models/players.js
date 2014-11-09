@@ -104,7 +104,6 @@ RAD.model('Players', Backbone.Collection.extend({
             try{
                 var ends = _.filter(this.toJSON(), function(obj){ return !_.findWhere(first.concat(current_combo), obj); })
             }catch(e){
-                console.log('---------------------end---------------------')
                 return;
             }
             this.allCombos.push(first.concat(current_combo).concat(ends));

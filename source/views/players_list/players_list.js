@@ -128,10 +128,18 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             $overlay = $(document).find('#overlay'),
             newItemHeight = this.newItemHeight,
             scroll = this.mScroll,
+            sinus,
             cosinus,
             deg;
 
+        if(isNewAdded && position<0){
+            cosinus = (150 + position)/newItemHeight;
+            deg = Math.acos(cosinus)*180/Math.PI;
+            newItem.style.webkitTransform = 'rotateX(' + (deg-90) + 'deg)';
+            console.log(newItem.style.webkitTransform)
+        }
         if(this.removedAdd){
+            console.log('-----------REMOVE-------------')
                 cosinus = (newItemHeight - Math.abs(position))/newItemHeight;
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position===-newItemHeight || !position){
@@ -146,17 +154,19 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             return;
         }
         if (!isNewAdded && position >=0) {
+            console.log('-----------AAAA-------------', position)
                 cosinus = (position)/newItemHeight;
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position > newItemHeight){
                 deg = 0;
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
+            console.log(newItem.style.webkitTransform)
         } else if(isNewAdded && (position <= newItemHeight) && position === 0 && this.updateListHeight){
             this.updateListHeight = false;
             this.itemInBottom = true;
             this.calculateListHeight('add');
-            this.stopScroll();
+            //this.stopScroll();
         }
     },
     onScrollStart: function(e){
@@ -265,7 +275,7 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
                 class: 'rotate'
             }, {silent: true});
             target.classList.add('rotate');
-            this.moveItemToBottom(target)
+            //this.moveItemToBottom(target)
         }
     },
     removeAdd: function(e){
