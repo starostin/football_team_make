@@ -128,18 +128,20 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             $overlay = $(document).find('#overlay'),
             newItemHeight = this.newItemHeight,
             scroll = this.mScroll,
-            sinus,
             cosinus,
             deg;
 
-        if(isNewAdded && position<0){
-            cosinus = (150 + position)/newItemHeight;
-            deg = Math.acos(cosinus)*180/Math.PI;
-            newItem.style.webkitTransform = 'rotateX(' + (deg-90) + 'deg)';
-            console.log(newItem.style.webkitTransform)
+        if(isNewAdded ){
+            if(position<=0){
+                cosinus = (150 + position)/newItemHeight;
+                deg = Math.acos(cosinus)*180/Math.PI;
+                newItem.style.webkitTransform = 'rotateX(' + (deg) + 'deg)';
+            }else{
+                deg = 0;
+                newItem.style.webkitTransform = 'rotateX(' + (deg) + 'deg)';
+            }
         }
         if(this.removedAdd){
-            console.log('-----------REMOVE-------------')
                 cosinus = (newItemHeight - Math.abs(position))/newItemHeight;
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position===-newItemHeight || !position){
@@ -154,14 +156,12 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             return;
         }
         if (!isNewAdded && position >=0) {
-            console.log('-----------AAAA-------------', position)
                 cosinus = (position)/newItemHeight;
                 deg = Math.acos(cosinus)*180/Math.PI;
             if(position > newItemHeight){
                 deg = 0;
             }
             newItem.style.webkitTransform = 'rotateX(' + deg + 'deg)';
-            console.log(newItem.style.webkitTransform)
         } else if(isNewAdded && (position <= newItemHeight) && position === 0 && this.updateListHeight){
             this.updateListHeight = false;
             this.itemInBottom = true;
@@ -181,6 +181,16 @@ RAD.view("view.players_list", RAD.Blanks.ScrollableView.extend({
             b = a[1].split('deg'),
             deg = b[0];
 
+
+        if(deg >= 45 && newItem.classList.contains('added')){
+            var $overlay = $(document).find('#overlay');
+            $overlay.addClass('show');
+            this.mScroll.scroll(-(this.newItemHeight + scroll.scrollPosition), 270);
+            newItem.classList.remove('added');
+            this.removedAdd = true;
+            this.itemInBottom = false;
+            return;
+        }
         if(deg <= 10 && !newItem.classList.contains('added')){
             scroll.mTopOffset = 0;
             scroll.scrollPosition = scroll.scrollPosition - this.newItemHeight;
