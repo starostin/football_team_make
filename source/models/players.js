@@ -19,7 +19,7 @@ RAD.model('Players', Backbone.Collection.extend({
     model: RAD.models.Player,
     optionsForComb: {},
     optionsForGetComb: {},
-    maxCombinations: 200000,
+    maxCombinations: 2000,
     combCounter: 0,
     allCombos: [],
     factorial: function(number){
@@ -104,6 +104,7 @@ RAD.model('Players', Backbone.Collection.extend({
             try{
                 var ends = _.filter(this.toJSON(), function(obj){ return !_.findWhere(first.concat(current_combo), obj); })
             }catch(e){
+                console.log('---------------------end---------------------')
                 return;
             }
             this.allCombos.push(first.concat(current_combo).concat(ends));
@@ -214,7 +215,7 @@ RAD.model('Players', Backbone.Collection.extend({
             summary.diff = +((+(+alm/commands.length - 1).toFixed(4))*100).toFixed(2);
             separatedCommands.push(summary);
         }
-        separatedCommands.sort(function(a,b){return a.diff-b.diff});
+        var newArr = separatedCommands.sort(function(a,b){return a.diff-b.diff});
         mostSuitable = this.getMostSuitable(newArr);
         separatedCommands.length = mostSuitable;
         return separatedCommands;
@@ -231,7 +232,7 @@ RAD.model('Players', Backbone.Collection.extend({
     },
     getMostSuitable: function(allVariants){
         for(var i=0; i<allVariants.length; i++){
-            if(allVariants[i].diff!==allVariants[i+1].diff)
+            if(allVariants[i+1] && allVariants[i].diff!==allVariants[i+1].diff)
                 break;
         }
         return i+1;
